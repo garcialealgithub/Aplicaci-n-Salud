@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter as tk
+import datos 
 
 class Window:
     def __init__(self, title):
@@ -47,8 +48,12 @@ class Login(Window):
 
     def login(self):
         loginCredentials = {'user': self.user_entry.get(), 'password': self.passw_entry.get()}
-        self.destroy()
-        mainWindow = MainWindow(loginCredentials)
+        if (loginCredentials["user"] in datos.usuarios_info) and (loginCredentials["password"] in datos.usuarios_info[loginCredentials["user"]]):
+            print("Usuario encontrado")
+            self.destroy()
+            mainWindow = MainWindow(loginCredentials)
+        else:
+            print("Usuario no encontrado")
 
     def register(self):
         self.destroy()
@@ -110,11 +115,17 @@ class Register(Window):
         login = Login()
 
     def register(self):
-        print(self.Ruser_entry.get())
-        print(self.Rpassw_entry.get())
-        print(self.Redad_entry.get())
-        print(self.sexo)
+        usuario = self.Ruser_entry.get()
+        contraseña = self.Rpassw_entry.get()
+        edad = self.Redad_entry.get()
+        sexo = self.sexo
+        
+        #Guardar datos
+        datos.usuarios_info[usuario] = contraseña
 
+        info_registro = [usuario, contraseña, edad, sexo]
+        return info_registro
+        
 
 class MainWindow():
     def __init__(self, loginCredentials):
