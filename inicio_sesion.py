@@ -25,7 +25,7 @@ class Window:
         self.root.geometry("600x600")
         self.root.resizable(0, 0)
         
-        self.icon = PhotoImage(file="icon.png")
+        self.icon = PhotoImage(file="images/icon.png")
         self.root.iconphoto(True, self.icon)
 
     def destroy(self):
@@ -34,7 +34,7 @@ class Window:
 class Login(Window):
     def __init__(self):
         super().__init__("Inicio de sesión")
-        self.bag = PhotoImage(file="background.png")
+        self.bag = PhotoImage(file="images/background.png")
         background = Label(self.root, image=self.bag)
         background.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -80,7 +80,7 @@ class Register(Window):
     def __init__(self):
         super().__init__("Registro")
 
-        self.bag = PhotoImage(file="background.png")
+        self.bag = PhotoImage(file="images/background.png")
         background = Label(self.root, image=self.bag)
         background.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -153,8 +153,8 @@ class MainWindow:
         self.root.geometry("800x600")
         self.root.resizable(0, 0)
 
-        Mbg = PhotoImage(file="main_bg.png")
-        userImg = PhotoImage(file="userImg.png")
+        Mbg = PhotoImage(file="images/main_bg.png")
+        userImg = PhotoImage(file="images/userImg.png")
 
         self.usuario = user
         self.password = password
