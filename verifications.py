@@ -68,5 +68,14 @@ def send_mail():
     
     return codigo_verificacion
 
+def code_verification():
+    code = send_mail()
+    user_code = input("Código: ")
+    if user_code == code:
+        print("Código correcto")
+        return True
+    else:
+        print("Código incorrecto")
+        return False
 
-send_mail()
+code_verification()
