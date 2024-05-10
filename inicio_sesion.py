@@ -68,6 +68,7 @@ class Login(Window):
             print("Usuario encontrado")
             self.destroy()
             mainWindow = MainWindow(user)
+            print(user, password)
         else:
             print("Usuario no encontrado")
 
@@ -145,8 +146,7 @@ class Register(Window):
         # Guardar la contraseña hasheada
         hashed_passwords[usuario] = hashed_password
 
-        info_registro = [usuario, contraseña, edad, sexo]
-        print("Usuario registrado:", info_registro)
+        print("Usuario registrado:", usuario)
 
 class MainWindow:
     def __init__(self, user):
