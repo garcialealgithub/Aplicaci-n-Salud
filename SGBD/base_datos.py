@@ -10,18 +10,29 @@ def hasher(password):
 
 # Función que comprueba si el hash coincide con la contraseña
 def comprobar_hash(password, hashed_password):
-    password = bcrypt.checkpw(password.encode(), hashed_password)
-    return password
+    comprobacion = bcrypt.checkpw(password.encode(), hashed_password)
+    return comprobacion
 
 
 
 
 # BASE DE DATOS
-db = sqlite3.connect("SGBD/data.db")
-cursor = db.cursor()
-cursor.execute("""CREATE TABLE IF NOT EXISTS security 
-               (user TEXT PRIMARY KEY, 
-               password TEXT NOT NULL)""")
+
+def password_verification(usuario):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    consulta = f"SELECT password FROM security WHERE user = ?;"
+    cursor.execute(consulta, (usuario,))
+    resultado = cursor.fetchone()
+    db.commit()
+    db.close()
+
+    if resultado:
+        return resultado[0]
+    else:
+        return "Usuario no encontrado"
+    
+    
 
 
 
@@ -34,8 +45,16 @@ def borrar_tabla(tabla):
     cursor.execute(f"DROP TABLE IF EXISTS {tabla}")
     db.commit()
     db.close()
+    print(f"La tabla '{tabla}' ha sido eliminada")
 
-def insert_security(user, password):
+
+
+def insert_user_info(user, password):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS security 
+               (user TEXT PRIMARY KEY, 
+               password TEXT NOT NULL)""")
     cursor.execute(f"SELECT * FROM security WHERE user = ?", (user,))
     data = cursor.fetchone()
     if data is None:
@@ -45,13 +64,6 @@ def insert_security(user, password):
     else:
         print(f"El usuario {user} ya existe en la base de datos.")
         db.close()
-
-
-
-
-
-
-
 
 
 

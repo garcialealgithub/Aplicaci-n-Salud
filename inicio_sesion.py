@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter as tk
+from tkinter import messagebox
 import bcrypt
 import SGBD.base_datos as BD
 
@@ -11,12 +12,11 @@ plain_passwords = {
     "a": "a"
 }
 
-# Diccionario de contraseñas hasheadas
-hashed_passwords = {}
 
-# Hashing de las contraseñas y almacenamiento en el diccionario de contraseñas hasheadas
 for user, password in plain_passwords.items():
-    hashed_passwords[user] = BD.hasher(password)
+    BD.insert_user_info(user, password = BD.hasher(password))
+
+
 
 class Window:
     def __init__(self, title):
@@ -64,11 +64,11 @@ class Login(Window):
     def login(self):
         user = self.user_entry.get()
         password = self.passw_entry.get()
-        if user in hashed_passwords and bcrypt.checkpw(password.encode(), hashed_passwords[user]):
+        if BD.comprobar_hash(password, BD.password_verification(usuario=user)):
             print("Usuario encontrado")
             self.destroy()
             mainWindow = MainWindow(user, password)
-            BD.insert_security(user, password)
+            BD.insert_user_info(user, password)
         else:
             print("Usuario no encontrado")
 
