@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter as tk
 import bcrypt
+import SGBD.base_datos as BD
 
 # Lista de contraseñas sin hashear
 plain_passwords = {
@@ -15,8 +16,7 @@ hashed_passwords = {}
 
 # Hashing de las contraseñas y almacenamiento en el diccionario de contraseñas hasheadas
 for user, password in plain_passwords.items():
-    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    hashed_passwords[user] = hashed_password
+    hashed_passwords[user] = BD.hasher(password)
 
 class Window:
     def __init__(self, title):
@@ -67,7 +67,7 @@ class Login(Window):
         if user in hashed_passwords and bcrypt.checkpw(password.encode(), hashed_passwords[user]):
             print("Usuario encontrado")
             self.destroy()
-            mainWindow = MainWindow(user)
+            mainWindow = MainWindow(user, password)
             print(user, password)
         else:
             print("Usuario no encontrado")
@@ -140,16 +140,14 @@ class Register(Window):
         # Guardar la contraseña sin hashear
         plain_passwords[usuario] = contraseña
 
-        # Hashing de la contraseña
-        hashed_password = bcrypt.hashpw(contraseña.encode(), bcrypt.gensalt())
-
         # Guardar la contraseña hasheada
-        hashed_passwords[usuario] = hashed_password
+        hashed_passwords[usuario] = BD.hasher(password)
+        print(hashed_passwords[usuario])
 
         print("Usuario registrado:", usuario)
 
 class MainWindow:
-    def __init__(self, user):
+    def __init__(self, user, password):
         self.root = Tk()
         self.root.title("Aplicación de salud")
         self.root.geometry("800x600")
@@ -159,6 +157,7 @@ class MainWindow:
         userImg = PhotoImage(file="userImg.png")
 
         self.usuario = user
+        self.password = password
 
         self.framePrincipal = Frame(self.root, width=800, height=600)
         self.framePrincipal.place(x=0, y=0)
@@ -216,4 +215,3 @@ class MainWindow:
 if __name__ == "__main__":
     login = Login()
 
-print(hashed_passwords)

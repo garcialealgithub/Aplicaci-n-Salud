@@ -1,6 +1,26 @@
 # SISTEMA DE GESTIÓN DE BASE DE DATOS
 
-import sqlite3
+# Módulos necesarios
+import sqlite3,bcrypt
+
+# Función que hashea las contraseñas
+def hasher(password):
+    hashed_passwords = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    return hashed_passwords
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Conexión a la base de datos (se crea si no existe)
 conn = sqlite3.connect('usuarios.db')
@@ -23,7 +43,7 @@ def insertar_datos(cursor):
     cursor.execute("INSERT INTO usuarios (nombre, edad) VALUES (?, ?)", ('María', 25))
 
     
-
+"""
 # Consulta
 cursor.execute("SELECT * FROM usuarios")
 print("Todos los usuarios:")
@@ -54,3 +74,4 @@ for row in cursor.fetchall():
 def cerrar_conexión():
     # Cerrar la conexión
     conn.close()
+"""
