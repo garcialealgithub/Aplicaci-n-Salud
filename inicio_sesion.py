@@ -68,7 +68,7 @@ class Login(Window):
             print("Usuario encontrado")
             self.destroy()
             mainWindow = MainWindow(user, password)
-            print(user, password)
+            BD.insert_security(user, password)
         else:
             print("Usuario no encontrado")
 
@@ -140,10 +140,7 @@ class Register(Window):
         # Guardar la contraseña sin hashear
         plain_passwords[usuario] = contraseña
 
-        # Guardar la contraseña hasheada
-        hashed_passwords[usuario] = BD.hasher(password)
-        print(hashed_passwords[usuario])
-
+        BD.insert_security(usuario, BD.hasher(contraseña))
         print("Usuario registrado:", usuario)
 
 class MainWindow:
