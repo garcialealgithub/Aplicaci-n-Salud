@@ -66,4 +66,12 @@ def insert_user_info(user, password):
         db.close()
 
 
+# Si alguien ve esto, hay que vincular esta fución con eliminar cuenta (antes hay que hacer la verificación con el código del gmail)
+def drop_user_info(user):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM security WHERE user = ?", (user,))
+    db.commit()
+    db.close()
+    print(f"El usuario '{user}' ha  sido eliminado de la base de datos")
 
