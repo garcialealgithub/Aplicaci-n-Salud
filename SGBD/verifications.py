@@ -15,13 +15,13 @@ def crear_codigo():
 
 
 # Función que manda un correo con el código de verificación
-def send_mail():
+def send_mail(email, subject):
 
     # Cargar variables de entorno desde el archivo .env
     load_dotenv()
 
     remitente = "Soporte HEALTHSYNC"
-    destinatarios = ["pabgarcia2005@gmail.com"]
+    destinatarios = email
 
 
 
@@ -36,7 +36,7 @@ def send_mail():
             <table style="width: 80%; border: 2px solid #0066ff; border-radius: 10px; padding: 20px; background-color: #ffffff;">
                 <tr>
                 <td style="text-align: center;">
-                    <h1 style="color: #0066ff; font-weight: bold;">CAMBIO DE CONTRASEÑA</h1>
+                    <h1 style="color: #0066ff; font-weight: bold;">{subject}</h1>
                     <p style="font-size: 18px; color: #000000;">El código es:</p>
                     <p style="font-size: 75px; color: #000000; font-weight: bold;">{codigo_verificacion}</p>
                     <p style="font-size: 10px; color: #0066ff; margin-top: 20px;">HealthSync™ - Todos los derechos reservados © 2024</p>
@@ -54,7 +54,7 @@ def send_mail():
     msg = MIMEMultipart()
     msg["From"] = remitente
     msg["To"] = ", ".join(destinatarios)
-    msg["Subject"] = "Cambio de contraseña"
+    msg["Subject"] = subject
 
     # Adjunta el mensaje HTML al correo electrónico
     msg.attach(MIMEText(mensaje_html, "html"))
@@ -68,8 +68,8 @@ def send_mail():
     
     return codigo_verificacion
 
-def code_verification():
-    code = send_mail()
+def code_verification(email, subject):
+    code = send_mail(email, subject)
     user_code = input("Código: ")
     if user_code == code:
         print("Código correcto")
@@ -78,4 +78,13 @@ def code_verification():
         print("Código incorrecto")
         return False
 
-code_verification()
+
+def email_verification(email, subject):
+    if code_verification(email, subject = "VERIFICACIÓN EMAIL"):
+        #CAMBIAMOS ESTADO A TRUE
+        pass
+    
+    else:
+        #SE MANTINE EL ESTADO FALSE
+        pass
+

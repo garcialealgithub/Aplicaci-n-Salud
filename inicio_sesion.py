@@ -4,17 +4,6 @@ from tkinter import messagebox
 import bcrypt
 import SGBD.base_datos as BD
 
-# Lista de contraseñas sin hashear
-plain_passwords = {
-    "Pepito": "a",
-    "Paquito": "b",
-    "Taron": "c",
-    "a": "a"
-}
-
-
-for user, password in plain_passwords.items():
-    BD.insert_user_info(user, password = BD.hasher(password))
 
 
 
