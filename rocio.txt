@@ -1,0 +1,7 @@
+necesito que crees una clase que recoja todos los errores del inicio de sesión y del registro, había pensado en las siguientes:
+-El usuario debe de ser un correo electronico gmail
+-La contraseña no puede contener al usuario
+-Da igual si pones el usuario en mayúsculas o en minúsculas
+-la contraseña debe de contener mayúsculas, minúsculas y algún caracter especial
+-la edad debe de ser un número en un rango de 5 a 100
+*(cuidado que el input es de tipo str, no hay nada definido)
