@@ -3,22 +3,10 @@
 # Módulos necesarios
 import sqlite3, bcrypt
 
+# ESTRUCTURA DE LAS FUNCIONES:
 
-# Función que hashea las contraseñas
-def hasher(password):
-    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    return hashed_password
-
-# Función que comprueba si el hash coincide con la contraseña
-def comprobar_hash(password, hashed_password):
-    comprobacion = bcrypt.checkpw(password.encode(), hashed_password)
-    return comprobacion
-
-
-
-
-# BASE DE DATOS
-
+    # CREAR TABLA
+ 
 def crear_tabla(tabla):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
@@ -30,8 +18,19 @@ def crear_tabla(tabla):
     db.commit()
     db.close()
 
+    # USUARIOS Y CONTRASEÑAS
 
+# Función que hashea las contraseñas
+def hasher(password):
+    hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    return hashed_password
 
+# Función que comprueba si el hash coincide con la contraseña (devuelve True o False)
+def comprobar_hash(password, hashed_password):
+    comprobacion = bcrypt.checkpw(password.encode(), hashed_password)
+    return comprobacion
+
+# Buscar que hace
 def password_verification(usuario):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
@@ -45,24 +44,8 @@ def password_verification(usuario):
         return resultado[0]
     else:
         return "Usuario no encontrado"
-    
-    
 
-
-
-
-
-# Función que borra una tabla
-def borrar_tabla(tabla):
-    db = sqlite3.connect("SGBD/data.db")
-    cursor = db.cursor()
-    cursor.execute(f"DROP TABLE IF EXISTS {tabla}")
-    db.commit()
-    db.close()
-    print(f"La tabla '{tabla}' ha sido eliminada")
-
-
-
+# Introduce los datos de usuario y contraseña si no están el BD
 def insert_user_info(user, password):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
@@ -77,6 +60,9 @@ def insert_user_info(user, password):
     else:
         print(f"El usuario {user} ya existe en la base de datos.")
         db.close()
+
+
+    # CORREO Y VERIFICACIÓN
 
 def insert_user_email(user, email):
     db = sqlite3.connect("SGBD/data.db")
@@ -99,28 +85,50 @@ def insert_user_email(user, email):
 
 
 # Así funcionan los parámetros:
-#   future_status es el estado al que quieres cambiar (1 es verificado)
-#   status es el estado actual (al crearla es NULL, 0 es false) --> la primera vez pongamos todo a 0: future_status = 0, status = NULL
-def insert_email_status(user, future_status, status):
+#   user: usuario al que modificar el estado
+#   future_status: nuevo estado al que se desea cambiar (0 FALSE, 1 TRUE)
+def update_email_status(user, future_status):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
-    cursor.execute(f"UPDATE security SET everification = {status} WHERE everification = {status}; ") #Al crear la tabla es NULL (hay que cambiarlo)
+    cursor.execute("UPDATE security SET everification = ? WHERE user = ?", (future_status, user))
     db.commit()
     db.close()
 
-
-# Añadir bucle for (tiene que ser capaz de saber el número total de usuarios antes del bucle)
-def update_users_status(future_status):
+def update_all_email_status(future_status):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
-    cursor.execute(f"UPDATE security SET everification = {future_status} WHERE everification != {future_status}; ")
+    cursor.execute("SELECT COUNT(*) FROM security")
+    total_users = cursor.fetchone()[0]
+    for i in range(total_users):
+        cursor.execute("UPDATE security SET everification = ?", (future_status,))
     db.commit()
     db.close()
-
+    print("Todos los estados han sido actualizados")
     
+def saber_user_con_email(email):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
 
+    cursor.execute("SELECT user FROM security WHERE email = ?", (email,))
+    user = cursor.fetchone()
+    db.commit()
+    db.close()
 
+    if user:
+        return user[0]
+    else:
+        return None
 
+    # BORRAR DATOS
+
+# Función que borra una tabla
+def borrar_tabla(tabla):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    cursor.execute(f"DROP TABLE IF EXISTS {tabla}")
+    db.commit()
+    db.close()
+    print(f"La tabla '{tabla}' ha sido eliminada")
 
 # Si alguien ve esto, hay que vincular esta fución con eliminar cuenta (antes hay que hacer la verificación con el código del gmail)
 def drop_user_info(user):
@@ -130,4 +138,5 @@ def drop_user_info(user):
     db.commit()
     db.close()
     print(f"El usuario '{user}' ha  sido eliminado de la base de datos")
+
 

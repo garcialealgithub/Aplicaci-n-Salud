@@ -1,4 +1,5 @@
-import os, random
+import os, random, sqlite3
+import SGBD.base_datos as BD
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -79,12 +80,13 @@ def code_verification(email, subject):
         return False
 
 
-def email_verification(email, subject):
+def email_verification(email):
+
     if code_verification(email, subject = "VERIFICACIÓN EMAIL"):
-        #CAMBIAMOS ESTADO A TRUE
-        pass
-    
+        BD.update_email_status(user= BD.saber_user_con_email(email), future_status=1)
+        print(f"El correo {email} ha sido verificado correctamente")
     else:
-        #SE MANTINE EL ESTADO FALSE
-        pass
+        #SE MANTIENE EL ESTADO FALSE
+        print("No se ha podido verificar el correo")
+
 
