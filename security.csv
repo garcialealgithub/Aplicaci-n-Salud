@@ -1,0 +1,11 @@
+name,password,age,sex,email,verified_email
+Juan García,clave123,28,M,juang@email.com,TRUE
+María Rodríguez,segura456,35,F,maria.r@email.com,FALSE
+Alejandro Martínez,contraseña789,42,M,alejandro.m@email.com,TRUE
+Sofía López,sofiapw,30,F,sofialopez@email.com,TRUE
+Carlos Fernández,carlitos123,25,M,carlos.f@email.com,FALSE
+Ana Pérez,anapass,33,F,ana.p@email.com,TRUE
+Luis González,luisgpw,37,M,luisg@email.com,FALSE
+Elena Ruiz,elena123,29,F,elena.r@email.com,TRUE
+Diego Sánchez,diego456,31,M,diego.s@email.com,TRUE
+Carmen Gómez,carmen789,40,F,carmen.g@email.com,FALSE
