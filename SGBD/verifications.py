@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
 
+
 # Creamos el código de verificación o cambio de contraseña
 def crear_codigo():
     codigo = ""
@@ -80,13 +81,18 @@ def code_verification(email, subject):
         return False
 
 
-def email_verification(email):
-
-    if code_verification(email, subject = "VERIFICACIÓN EMAIL"):
-        BD.update_email_status(user= BD.saber_user_con_email(email), future_status=1)
-        print(f"El correo {email} ha sido verificado correctamente")
-    else:
-        #SE MANTIENE EL ESTADO FALSE
-        print("No se ha podido verificar el correo")
-
-
+def verify_email(user, email):
+    BD.insert_user_email(user, email)
+    BD.update_email_status(user, future_status=1)
+    print(f"El correo {email} ha sido verificado correctamente")
+    
+        
+def email_verificated(user):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    cursor.execute("SELECT everification from security where user = ?", (user,))
+    verificated = cursor.fetchone()[0] == 1
+    
+    db.commit()
+    db.close()
+    return verificated

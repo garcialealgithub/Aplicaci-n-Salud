@@ -13,6 +13,8 @@ def crear_tabla(tabla):
     cursor.execute("""CREATE TABLE IF NOT EXISTS security 
                (user TEXT PRIMARY KEY, 
                password TEXT NOT NULL,
+               edad INT,
+               sexo TEXT,
                email TEXT,
                everification BOOLEAN)""")
     db.commit()
@@ -46,7 +48,7 @@ def password_verification(usuario):
         return "Usuario no encontrado"
 
 # Introduce los datos de usuario y contraseña si no están el BD
-def insert_user_info(user, password):
+def insert_user_info(user, password, edad, sexo):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
     # Verificamos que exista el usuario
@@ -54,7 +56,7 @@ def insert_user_info(user, password):
     data = cursor.fetchone()
     # Si el usuario no existe introduce los valores
     if data is None:
-        cursor.execute(f"INSERT INTO security (user, password) VALUES (?, ?)", (user, password))
+        cursor.execute(f"INSERT INTO security (user, password, sexo, edad) VALUES (?, ?, ?, ?)", (user, password, sexo, edad))
         db.commit()
         db.close()
     else:
@@ -94,32 +96,7 @@ def update_email_status(user, future_status):
     db.commit()
     db.close()
 
-def update_all_email_status(future_status):
-    db = sqlite3.connect("SGBD/data.db")
-    cursor = db.cursor()
-    cursor.execute("SELECT COUNT(*) FROM security")
-    total_users = cursor.fetchone()[0]
-    for i in range(total_users):
-        cursor.execute("UPDATE security SET everification = ?", (future_status,))
-    db.commit()
-    db.close()
-    print("Todos los estados han sido actualizados")
-    
-def saber_user_con_email(email):
-    db = sqlite3.connect("SGBD/data.db")
-    cursor = db.cursor()
 
-    cursor.execute("SELECT user FROM security WHERE email = ?", (email,))
-    user = cursor.fetchone()
-    db.commit()
-    db.close()
-
-    if user:
-        return user[0]
-    else:
-        return None
-
-    # BORRAR DATOS
 
 # Función que borra una tabla
 def borrar_tabla(tabla):

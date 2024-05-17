@@ -1,0 +1,15 @@
+--> GENERACIÓN DE GRAFOS <--
+
+-Sueño: total, profundo, mor, fcard, algoritmo de puntuación
+
+-Pasos: total de Pasos
+
+-fcard: media diaria, más alto/más bajo
+
+-Ejercicio: fcard, calorias, tiempo
+
+-Control de peso: IMC
+
+-Habitos / consejos de salud:
+
+-Recetas saludables:

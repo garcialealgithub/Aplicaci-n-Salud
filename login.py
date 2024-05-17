@@ -1,15 +1,13 @@
 from tkinter import *
 import tkinter as tk
 from tkinter import messagebox
-import bcrypt
 import SGBD.base_datos as BD
+import mainWindow as mW
 
-
-
-
-class Window:
-    def __init__(self, title):
-        self.root = Tk()
+# Clase pre ventana. Representa una ventana de la aplicación de inicio de sesión o  registro
+class preWindow:
+    def __init__(self, root, title):
+        self.root = root
         self.root.title(title)
         self.root.geometry("600x600")
         self.root.resizable(0, 0)
@@ -17,12 +15,12 @@ class Window:
         self.icon = PhotoImage(file="images/icon.png")
         self.root.iconphoto(True, self.icon)
 
-    def destroy(self):
+    def on_closing(self):
         self.root.destroy()
 
-class Login(Window):
-    def __init__(self):
-        super().__init__("Inicio de sesión")
+class Login(preWindow):
+    def __init__(self, root):
+        super().__init__(root, "Inicio de sesión")
         self.bag = PhotoImage(file="images/background.png")
         background = Label(self.root, image=self.bag)
         background.place(x=0, y=0, relwidth=1, relheight=1)
@@ -48,26 +46,31 @@ class Login(Window):
         registerButton = Button(frameLogin, text="Registrarse", font=("Arial", 12), fg='black', command=self.register)
         registerButton.place(relx=0.5, rely=0.85, anchor=CENTER)
 
-        self.root.mainloop()
+
 
     def login(self):
         user = self.user_entry.get()
         password = self.passw_entry.get()
         if BD.comprobar_hash(password, BD.password_verification(usuario=user)):
-            print("Usuario encontrado")
-            self.destroy()
-            mainWindow = MainWindow(user, password)
-            BD.insert_user_info(user, password)
+            
+            self.root.withdraw()
+            new_root = Toplevel(self.root)
+            mainWindow = mW.MainWindow(user, password, new_root)
+            new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+
         else:
-            print("Usuario no encontrado")
+            messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
     def register(self):
-        self.destroy()
-        register = Register()
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        register = Register(new_root)
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+        
 
-class Register(Window):
-    def __init__(self):
-        super().__init__("Registro")
+class Register(preWindow):
+    def __init__(self, root):
+        super().__init__(root, "Registro")
 
         self.bag = PhotoImage(file="images/background.png")
         background = Label(self.root, image=self.bag)
@@ -103,9 +106,9 @@ class Register(Window):
         def sexChoose():
             self.sexo = self.variable.get()
 
-        hombre = Radiobutton(frameRegister, text="Hombre", variable=self.variable, value='Hombre', command=sexChoose)
+        hombre = Radiobutton(frameRegister, text="Hombre", variable=self.variable, value='M', command=sexChoose)
         hombre.place(relx=0.5, rely=0.70, anchor='w')
-        mujer = Radiobutton(frameRegister, text="Mujer", variable=self.variable, value='Mujer', command=sexChoose)
+        mujer = Radiobutton(frameRegister, text="Mujer", variable=self.variable, value='F', command=sexChoose)
         mujer.place(relx=0.5, rely=0.78, anchor='w')
 
         registerButton = Button(frameRegister, text="Registrarse", font=("Arial", 16), fg='white', bg='red', command=self.register_user)
@@ -114,90 +117,19 @@ class Register(Window):
         loginButton = Button(frameRegister, text="Iniciar sesión", font=("Arial", 12), command=self.login)
         loginButton.place(relx=0.57, rely=0.9, anchor='w')
 
-        self.root.mainloop()
 
     def login(self):
-        self.destroy()
-        login = Login()
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        login = Login(new_root)
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def register_user(self):
         usuario = self.Ruser_entry.get()
         contraseña = self.Rpassw_entry.get()
         edad = self.Redad_entry.get()
         sexo = self.sexo
-        
-        # Guardar la contraseña sin hashear
-        plain_passwords[usuario] = contraseña
 
-        BD.insert_security(usuario, BD.hasher(contraseña))
-        print("Usuario registrado:", usuario)
-
-class MainWindow:
-    def __init__(self, user, password):
-        self.root = Tk()
-        self.root.title("Aplicación de salud")
-        self.root.geometry("800x600")
-        self.root.resizable(0, 0)
-
-        Mbg = PhotoImage(file="images/main_bg.png")
-        userImg = PhotoImage(file="images/userImg.png")
-
-        self.usuario = user
-        self.password = password
-
-        self.framePrincipal = Frame(self.root, width=800, height=600)
-        self.framePrincipal.place(x=0, y=0)
-
-        self.userframe = Frame(self.framePrincipal, width=200, height=450, relief='groove', border=8)
-        self.userframe.place(x=600, y=0) 
-        
-        self.user = Label(self.userframe, text="Bienvenido, ", font=("Arial", 14))
-        self.user.place(relx=0.5, rely=0.45, anchor=CENTER)
-
-        self.user = Label(self.userframe, text=user, font=("Arial", 14), fg='red')
-        self.user.place(relx=0.5, rely=0.55, anchor=CENTER)
-        
-        self.userImg = Label(self.userframe, image=userImg)
-        self.userImg.place(relx=0.5, rely=0.2, anchor=CENTER)
-        
-        self.userFrameButtons = Frame(self.userframe, width=100, height=100)
-        self.userFrameButtons.place(relx=0.5, rely=0.8, anchor=CENTER)
-
-        changePw = Button(self.userFrameButtons, text="Cambiar contraseña", font=("Arial", 10))
-        changePw.pack()
-
-        logout = Button(self.userFrameButtons, text="Cerrar sesión", font=("Arial", 10))
-        logout.pack()
-
-        deleteAccount = Button(self.userFrameButtons, text="Eliminar cuenta", font=("Arial", 10))  
-        deleteAccount.pack()
-
-        self.pantalla = Frame(self.framePrincipal, width=608, height=450, relief='groove', border=8)
-        self.pantalla.place(x=0, y=0)
-
-        fondo = Label(self.pantalla, image=Mbg)
-        fondo.place(x=0, y=0, relwidth=1, relheight=1)
-
-        self.buttons = Frame(self.framePrincipal, width=800, height=150, bg='gray')
-        self.buttons.place(x=0, y=450)
-
-        self.button1 = tk.Button(self.buttons, text="Botón 1", width=10, height=2)
-        self.button1.grid(column=1, row=0, pady=60, padx=54)
-
-        self.button2 = tk.Button(self.buttons, text="Botón 2", width=10, height=2)
-        self.button2.grid(column=2, row=0, pady=60, padx=54)
-
-        self.button3 = tk.Button(self.buttons, text="Botón 3", width=10, height=2)
-        self.button3.grid(column=3, row=0, pady=60, padx=54)
-
-        self.button4 = tk.Button(self.buttons, text="Botón 4", width=10, height=2)
-        self.button4.grid(column=4, row=0, pady=60, padx=54)
-
-        self.button5 = tk.Button(self.buttons, text="Botón 5", width=10, height=2)
-        self.button5.grid(column=5, row=0, pady=60, padx=54)
-
-        self.root.mainloop()
-
-if __name__ == "__main__":
-    login = Login()
+        BD.insert_user_info(usuario, BD.hasher(contraseña), edad, sexo)
+        messagebox.showinfo("Correcto", "Usuario registrado correctamente")
 
