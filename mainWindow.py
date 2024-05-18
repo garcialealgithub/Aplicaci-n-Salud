@@ -74,16 +74,16 @@ class MainWindow:
         self.buttons.place(x=0, y=450)
         
         self.button2 = Button(self.buttons, text="Botón 2", width=10, height=2)
-        self.button2.grid(column=2, row=0, pady=60, padx=54)
+        self.button2.grid(column=2, row=0, pady=60, padx=60)
 
         self.button3 = Button(self.buttons, text="Botón 3", width=10, height=2)
-        self.button3.grid(column=3, row=0, pady=60, padx=54)
+        self.button3.grid(column=3, row=0, pady=60, padx=60)
 
         self.button4 = Button(self.buttons, text="Botón 4", width=10, height=2)
-        self.button4.grid(column=4, row=0, pady=60, padx=54)
+        self.button4.grid(column=4, row=0, pady=60, padx=60)
 
         self.button5 = Button(self.buttons, text="Botón 5", width=10, height=2)
-        self.button5.grid(column=5, row=0, pady=60, padx=54)
+        self.button5.grid(column=5, row=0, pady=60, padx=60)
     
 
     ## Funciones de los botones ##
