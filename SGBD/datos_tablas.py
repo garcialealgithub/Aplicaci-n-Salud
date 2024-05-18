@@ -43,7 +43,7 @@ for i in range(len(contraseña_txtplano)):
     hashed_passwords.append(BD.hasher(password=contraseña_txtplano[i]))
 
 
-BD.borrar_tabla(tabla="steps")
-BD.crear_tabla_steps()
+BD.borrar_tabla(tabla="training")
+BD.crear_tabla_training()
 
-BD.añadir_datos_steps_from_csv()
+BD.añadir_datos_training_from_csv()

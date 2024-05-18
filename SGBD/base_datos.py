@@ -125,6 +125,56 @@ def añadir_datos_steps_from_csv():
     db.close()
 
 
+def crear_tabla_training():
+
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+
+    cursor.execute('''
+    CREATE TABLE training (
+    user TEXT,
+    date TEXT,
+    time TEXT,
+    duration TEXT,
+    calories INT,
+    mean_cardfreq INT,
+    PRIMARY KEY(user, date),
+    FOREIGN KEY(user) REFERENCES security(user)
+)
+''')
+        
+    db.commit()
+    db.close()
+
+
+def añadir_datos_training_from_csv():
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+
+    # Abrir el archivo CSV y leer los datos
+    with open("SGBD/training.csv", 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            user = row['user']
+            date = row['date']
+            time = row['time']
+            duration = row['duration']
+            calories = int(row['calories_consumed']) 
+            mean_cardfreq = int(row['mean_cardiac_frequency'])
+            cursor.execute('''
+            SELECT * FROM training WHERE date = ? AND user = ?
+            ''', (date, user))
+            existing_row = cursor.fetchone()
+            # Insertar el nuevo registro si no existe una fila con la misma combinación de date y user
+            if existing_row is None:
+                cursor.execute('''
+                INSERT INTO training (user, date, time, duration, calories, mean_cardfreq) 
+                VALUES (?, ?, ?, ?, ?, ?)
+                ''', (user, date, time, duration, calories, mean_cardfreq))
+    
+    db.commit()
+    db.close()
+
     # USUARIOS Y CONTRASEÑAS
 
 # Función que hashea las contraseñas
