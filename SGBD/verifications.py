@@ -4,28 +4,23 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
-
+import random
+from tkinter import messagebox
 
 # Creamos el código de verificación o cambio de contraseña
 def crear_codigo():
-    codigo = ""
-    for i in range(6):
-        numero = random.randint(0, 9)
-        codigo += str(numero)
-    
+    codigo = random.randint(100000, 999999)
     return codigo
 
 
 # Función que manda un correo con el código de verificación
 def send_mail(email, subject):
-
+    
     # Cargar variables de entorno desde el archivo .env
     load_dotenv()
 
     remitente = "Soporte HEALTHSYNC"
     destinatarios = email
-
-
 
     codigo_verificacion = crear_codigo()
     # Mensaje en formato HTML
@@ -70,22 +65,15 @@ def send_mail(email, subject):
     
     return codigo_verificacion
 
-def code_verification(email, subject):
-    code = send_mail(email, subject)
-    user_code = input("Código: ")
-    if user_code == code:
-        print("Código correcto")
-        return True
-    else:
-        print("Código incorrecto")
-        return False
-
 
 def verify_email(user, email):
-    BD.insert_user_email(user, email)
-    BD.update_email_status(user, future_status=1)
-    print(f"El correo {email} ha sido verificado correctamente")
-    
+    try:
+        BD.insert_user_email(user, email)
+        BD.update_email_status(user, future_status=1)
+        return True
+    except:
+        messagebox.showerror("Error", "No se ha podido verificar el correo")
+        return False
         
 def email_verificated(user):
     db = sqlite3.connect("SGBD/data.db")

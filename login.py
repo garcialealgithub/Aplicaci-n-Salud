@@ -49,18 +49,21 @@ class Login(preWindow):
 
 
     def login(self):
-        user = self.user_entry.get()
-        password = self.passw_entry.get()
-        if BD.comprobar_hash(password, BD.password_verification(usuario=user)):
-            
-            self.root.withdraw()
-            new_root = Toplevel(self.root)
-            mainWindow = mW.MainWindow(user, password, new_root)
-            new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-        else:
+        try:
+            user = self.user_entry.get()
+            password = self.passw_entry.get()
+            if BD.comprobar_hash(password, BD.password_verification(usuario=user)):
+                
+                self.root.withdraw()
+                new_root = Toplevel(self.root)
+                mainWindow = mW.MainWindow(user, password, new_root)
+                new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+            else:
+                messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+        except:
             messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-
+            
+            
     def register(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
@@ -125,11 +128,16 @@ class Register(preWindow):
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def register_user(self):
-        usuario = self.Ruser_entry.get()
-        contraseña = self.Rpassw_entry.get()
-        edad = self.Redad_entry.get()
-        sexo = self.sexo
+        try:    
+            self.usuario = self.Ruser_entry.get()
+            self.contraseña = self.Rpassw_entry.get()
+            self.edad = int(self.Redad_entry.get())
+            self.sexo = self.sexo
 
-        BD.insert_user_info(usuario, BD.hasher(contraseña), edad, sexo)
-        messagebox.showinfo("Correcto", "Usuario registrado correctamente")
+            if BD.insert_user_info(self.usuario, BD.hasher(self.contraseña), 
+                    self.edad, self.sexo):
+                messagebox.showinfo("Correcto", "Usuario registrado correctamente")
+        except:
+            messagebox.showerror("Error", "Introduce datos válidos")
+
 

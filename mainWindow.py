@@ -2,6 +2,9 @@ from tkinter import *
 import login as login
 import SGBD.verifications as v
 import verify_email_window as vw
+import change_password as cp
+import SGBD.base_datos as BD
+
 
 ## Clase ventana principal. Representa la ventana principal del programa
 class MainWindow:
@@ -10,7 +13,7 @@ class MainWindow:
         self.root.title("Aplicación de salud")
         self.root.geometry("800x600")
         self.root.resizable(width=False, height=False)
-
+        
         # Imágenes
         self.Mbg = PhotoImage(file="images/main_bg.png")
         self.userImg = PhotoImage(file="images/userImg.png")
@@ -19,6 +22,7 @@ class MainWindow:
         self.usuario = user
         self.password = password
 
+        # Frame principal
         self.framePrincipal = Frame(self.root, width=800, height=600)
         self.framePrincipal.place(x=0, y=0)
 
@@ -35,46 +39,34 @@ class MainWindow:
         self.userImg = Label(self.userframe, image=self.userImg)
         self.userImg.place(relx=0.5, rely=0.2, anchor=CENTER)
         
-        ## Botones de la ventana de usuario ##
-        # ERROR aparente: no se puede poner un boton con menos height de 2 o tamaño de letra menor a 15
-        # el mac cambia el estilo y no funciona. 
+        # Botones de la ventana de usuario
         
-        def logout():
-            self.root.withdraw()
-            new_root = Toplevel(self.root)
-            login.Login(new_root)
-            new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
-            
-        
-        def verifyEmail():
-            self.root.withdraw()
-            new_root = Toplevel(self.root)
-            vw.VerifyEmailWindow(self.usuario, self.password, new_root)
-            new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-        
-        # Boton de verificar correo #
-        verf = v.email_verificated(user)
-        
-        
-        if not verf:
-            verifyEmailButton = Button(self.userframe, text="Verificar correo", font=("Arial", 13), bg="gray", fg="black", command=verifyEmail)
+        # Botones que solo aparecen si el correo está verificado
+        if not v.email_verificated(user):
+            verifyEmailButton = Button(self.userframe, text="Verificar correo", font=("Arial", 13), bg="gray", 
+                fg="black", command=self.verifyEmail)
             verifyEmailButton.place(relx=0.5, rely=0.6, anchor=CENTER)
         
-        logoutButton = Button(self.userframe, text="Cerrar sesión", font=("Arial", 13), bg="gray", fg="black", command=logout)
-        logoutButton.place(relx=0.5, rely=0.7, anchor=CENTER)
+        else:
+            self.changePasswButton = Button(self.userframe, text="Cambiar contraseña", font=("Arial", 13), 
+                bg="gray", fg="black", command=self.changePassword)
+            self.changePasswButton.place(relx=0.5, rely=0.8, anchor=CENTER)
         
-        boton1 = Button(self.userframe, text="no se", font=("Arial", 13), bg="gray", fg="black")
-        boton1.place(relx=0.5, rely=0.8, anchor=CENTER)
+        self.logoutButton = Button(self.userframe, text="Cerrar sesión", font=("Arial", 13), bg="gray", 
+            fg="black", command=self.logout)
+        self.logoutButton.place(relx=0.5, rely=0.7, anchor=CENTER)
         
-        deleteAccountButton = Button(self.userframe, text="Eliminar ceunte", font=("Arial", 13), bg="gray", fg="black")
-        deleteAccountButton.place(relx=0.5, rely=0.9, anchor=CENTER)
+        self.deleteAccountButton = Button(self.userframe, text="Eliminar cuenta", font=("Arial", 13), 
+            bg="gray", fg="black", command=self.deleteAccount)
+        self.deleteAccountButton.place(relx=0.5, rely=0.9, anchor=CENTER)
         
+        
+        # Frame de la pantalla principal
         self.pantalla = Frame(self.framePrincipal, width=608, height=450, relief='groove', border=8)
         self.pantalla.place(x=0, y=0)
 
-        fondo = Label(self.pantalla, image=self.Mbg)
-        fondo.place(x=0, y=0, relwidth=1, relheight=1)
+        self.fondo = Label(self.pantalla, image=self.Mbg)
+        self.fondo.place(x=0, y=0, relwidth=1, relheight=1)
 
 
         ## Botones de la ventana principal ##     
@@ -92,6 +84,38 @@ class MainWindow:
 
         self.button5 = Button(self.buttons, text="Botón 5", width=10, height=2)
         self.button5.grid(column=5, row=0, pady=60, padx=54)
+    
 
+    ## Funciones de los botones ##
+    def logout(self):
+            self.root.withdraw()
+            new_root = Toplevel(self.root)
+            login.Login(new_root)
+            new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+            
+        
+    def deleteAccount(self):
+        BD.drop_user_info(self.usuario)
+        
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        login.Login(new_root)
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+    
+    def changePassword(self):
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        cp.ChangePassword(self.usuario, self.password, new_root)
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+        
+        
+    def verifyEmail(self):
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        vw.VerifyEmailWindow(self.usuario, self.password, new_root)
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+            
+    # Función de cierre de ventana
     def on_closing(self):
         self.root.destroy()
+    
