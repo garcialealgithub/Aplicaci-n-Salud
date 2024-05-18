@@ -1,5 +1,4 @@
 import sqlite3, csv, bcrypt
-from tkinter import messagebox
 
 # SET UP OF THE DATABASE
 
@@ -777,7 +776,7 @@ def drop_user(user, database="database.db"):
         db.close()
     
     except:
-        messagebox.showerror("Error", "El usuario no tiene pasos registrados")   
+        print("El usuario no tiene pasos registrados")   
      
     try:
         cursor.execute("DELETE FROM training WHERE user = ?", (user))
@@ -785,7 +784,7 @@ def drop_user(user, database="database.db"):
         db.close()
     
     except:
-        messagebox.showerror("Error", "El usuario no tiene entrenamientos registrados")
+        print("El usuario no tiene entrenamientos registrados")
         
     try:
         cursor.execute("DELETE FROM weight WHERE user = ?", (user))
@@ -793,21 +792,21 @@ def drop_user(user, database="database.db"):
         db.close()
     
     except:
-        messagebox.showerror("Error", "El usuario no tiene pesos registrados")
+        print("El usuario no tiene pesos registrados")
     try:
         cursor.execute("DELETE FROM cardiac_frequency WHERE user = ?", (user))
         db.commit()
         db.close()
     
     except:
-        messagebox.showerror("Error", "El usuario no tiene frecuencias cardíacas registradas")
+        print("El usuario no tiene frecuencias cardíacas registradas")
     try:
         cursor.execute("DELETE FROM sleep WHERE user = ?", (user))
         db.commit()
         db.close()
     
     except:
-        messagebox.showerror("Error", "El usuario no tiene datos de sueño registrados")
+        print("El usuario no tiene datos de sueño registrados")
         
 
 # READING FROM THE DATABASE
