@@ -2,6 +2,7 @@
 
 # Módulos necesarios
 import sqlite3, bcrypt
+from tkinter import messagebox
 
 # ESTRUCTURA DE LAS FUNCIONES:
 
@@ -59,9 +60,11 @@ def insert_user_info(user, password, edad, sexo):
         cursor.execute(f"INSERT INTO security (user, password, sexo, edad) VALUES (?, ?, ?, ?)", (user, password, sexo, edad))
         db.commit()
         db.close()
+        return True
     else:
-        print(f"El usuario {user} ya existe en la base de datos.")
-        db.close()
+        messagebox.showerror("Error", "El usuario ya existe")
+        db.close() 
+        return False
 
 
     # CORREO Y VERIFICACIÓN
@@ -107,13 +110,36 @@ def borrar_tabla(tabla):
     db.close()
     print(f"La tabla '{tabla}' ha sido eliminada")
 
-# Si alguien ve esto, hay que vincular esta fución con eliminar cuenta (antes hay que hacer la verificación con el código del gmail)
+# Función que borra un usuario
 def drop_user_info(user):
+    try:
+        db = sqlite3.connect("SGBD/data.db")
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM security WHERE user = ?", (user,))
+        db.commit()
+        db.close()
+        messagebox.showinfo("Correcto", "Usuario eliminado correctamente")
+    except:
+        messagebox.showerror("Error", "No se ha podido eliminar el usuario")
+
+
+def change_password(user, new_password):
+    try:
+        new_password = hasher(new_password)
+        db = sqlite3.connect("SGBD/data.db")
+        cursor = db.cursor()
+        cursor.execute("UPDATE security SET password = ? WHERE user = ?", (new_password, user))
+        db.commit()
+        db.close()
+        return True
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+        
+def saber_email(user):
     db = sqlite3.connect("SGBD/data.db")
     cursor = db.cursor()
-    cursor.execute("DELETE FROM security WHERE user = ?", (user,))
+    cursor.execute("SELECT email FROM security WHERE user = ?", (user,))
+    data = cursor.fetchone()
     db.commit()
     db.close()
-    print(f"El usuario '{user}' ha  sido eliminado de la base de datos")
-
-
+    return data[0]
