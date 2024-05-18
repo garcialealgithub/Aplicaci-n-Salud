@@ -31,10 +31,10 @@ class VerifyEmailWindow(cp.UserActions):
         self.entrycode = Entry(self.frame, font = ("Arial", 16))
         self.entrycode.place(relx = 0.5, rely = 0.7, anchor=CENTER)
         
-        self.codeButton = Button(self.frame, text = "Verificar código",font = ("Arial", 16), command = self.verify_code)
+        self.codeButton = Button(self.frame, text = "Verificar código",font = ("Arial", 15), command = self.verify_code)
         self.codeButton.place(relx = 0.5, rely = 0.8, anchor=CENTER)
         
-        backtoMain = Button(self.frame, text = "Volver", font = ("Arial", 16), command = self.backtomain)
+        backtoMain = Button(self.frame, text = "Volver", font = ("Arial", 14), command = self.backtomain)
         backtoMain.place(relx = 0.5, rely = 0.9, anchor=CENTER)
         
         
@@ -54,10 +54,7 @@ class VerifyEmailWindow(cp.UserActions):
             if int(self.entrycode.get()) == self.code:
                 v.verify_email(self.user, self.email)
                 messagebox.showinfo('Correcto', 'Correo verificado')
-                self.root.withdraw()
-                new_root = Toplevel(self.root)
-                mW.MainWindow(self.user, self.password, new_root)
-                new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+                backtomain()
                 
             else:
                 messagebox.showerror("Error", "Código incorrecto")

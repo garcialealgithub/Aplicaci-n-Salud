@@ -30,29 +30,29 @@ class ChangePassword(UserActions):
         self.frame.place(x = 0, y = 0)
         
         # Botones y entradas de datos #
-        self.verifytext = Label(self.frame, text = "Introduce el código \n que te hemos enviado al correo",     font = ("Arial", 16))
+        self.verifytext = Label(self.frame, text = "Introduce el código \n que te hemos enviado al correo",     font = ("Arial", 15))
         self.verifytext.place(relx = 0.5, rely = 0.15, anchor=CENTER)
         
         self.entryCode = Entry(self.frame, font = ("Arial", 16))
         self.entryCode.place(relx = 0.5, rely = 0.25, anchor=CENTER)
         
-        self.passw1 = Label(self.frame, text = "Introduce la nueva contraseña", font = ("Arial", 16))
+        self.passw1 = Label(self.frame, text = "Introduce la nueva contraseña", font = ("Arial", 15))
         self.passw1.place(relx = 0.5, rely = 0.37, anchor=CENTER)
         
         self.entryPassw1 = Entry(self.frame, font = ("Arial", 15))
         self.entryPassw1.place(relx = 0.5, rely = 0.45, anchor=CENTER)
         
-        self.passw2 = Label(self.frame, text = "Repite la nueva contraseña", font = ("Arial", 16))
+        self.passw2 = Label(self.frame, text = "Repite la nueva contraseña", font = ("Arial", 15))
         self.passw2.place(relx = 0.5, rely = 0.57, anchor=CENTER)
         
         self.entryPassw2 = Entry(self.frame, font = ("Arial", 15))
         self.entryPassw2.place(relx = 0.5, rely = 0.65, anchor=CENTER)
         
-        self.changeButton = Button(self.frame, text = "Cambiar contraseña", font = ("Arial", 16), 
-                    bg ='red', command=     self.change_password)
+        self.changeButton = Button(self.frame, text = "Cambiar contraseña", font = ("Arial", 15), 
+                    bg ='red', fg='white', command=     self.change_password)
         self.changeButton.place(relx = 0.5, rely = 0.8, anchor=CENTER)
         
-        backtoMain = Button(self.frame, text = "Volver", font = ("Arial", 16), command = self.backtomain)
+        backtoMain = Button(self.frame, text = "Volver", font = ("Arial", 15), command = self.backtomain(self.password))
         backtoMain.place(relx = 0.5, rely = 0.9, anchor=CENTER)
     
         # Enviamos el correo con el código de verificación
@@ -71,10 +71,7 @@ class ChangePassword(UserActions):
                     if BD.change_password(self.user, self.passw1):
                         messagebox.showinfo("Correcto", "Contraseña cambiada")
                         
-                        self.root.withdraw()
-                        new_root = Toplevel(self.root)
-                        mW.MainWindow(self.user, self.passw1, new_root)
-                        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+                        backtomain(self.passw1)
                     else:
                         messagebox.showerror("Error", "No se ha podido cambiar la contraseña")
                 else:
@@ -86,8 +83,8 @@ class ChangePassword(UserActions):
             messagebox.showerror("Error",e)
             
             
-    def backtomain(self):
+    def backtomain(self, password):
         self.root.withdraw()
         new_root = Toplevel()
-        mW.MainWindow(self.user, self.password, new_root)
+        mW.MainWindow(self.user, password, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
