@@ -1,4 +1,4 @@
-name,date,quality,duration,duration_deep_sleep,interruptions
+user,date,quality,duration,duration_deep_sleep,interruptions_counter
 Juan García,2024-05-16,85,07:30:00,03:00:00,1
 María Rodríguez,2024-05-16,85,07:30:00,03:00:00,1
 Alejandro Martínez,2024-05-16,80,07:15:00,02:45:00,2

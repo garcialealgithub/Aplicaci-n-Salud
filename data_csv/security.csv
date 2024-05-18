@@ -1,4 +1,4 @@
-name,password,age,sex,email,verified_email
+user,password,age,sex,email,verified_email
 Juan García,clave123,28,M,juang@email.com,TRUE
 María Rodríguez,segura456,35,F,maria.r@email.com,FALSE
 Alejandro Martínez,contraseña789,42,M,alejandro.m@email.com,TRUE
