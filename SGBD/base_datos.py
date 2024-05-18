@@ -79,6 +79,52 @@ def añadir_datos_weight_from_csv():
     db.commit()
     db.close()
 
+def crear_tabla_steps():
+
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+
+    cursor.execute('''
+    CREATE TABLE steps (
+    user TEXT,
+    date TEXT,
+    pasos INT,
+    PRIMARY KEY(user, date),
+    FOREIGN KEY(user) REFERENCES security(user)
+)
+''')
+        
+    db.commit()
+    db.close()
+
+
+def añadir_datos_steps_from_csv():
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+
+    # Abrir el archivo CSV y leer los datos
+    with open("SGBD/steps.csv", 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            user = row['user']
+            date = row['date']
+            pasos = float(row['number_of_steps'])  # Convertir a tipo float si es necesario
+            # Verificar si ya existe una fila con la misma combinación de date y user
+            cursor.execute('''
+            SELECT * FROM steps WHERE date = ? AND user = ?
+            ''', (date, user))
+            existing_row = cursor.fetchone()
+            # Insertar el nuevo registro si no existe una fila con la misma combinación de date y user
+            if existing_row is None:
+                cursor.execute('''
+                INSERT INTO steps (user, date, pasos) 
+                VALUES (?, ?, ?)
+                ''', (user, date, pasos))
+    
+    db.commit()
+    db.close()
+
+
     # USUARIOS Y CONTRASEÑAS
 
 # Función que hashea las contraseñas

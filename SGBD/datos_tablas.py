@@ -3,11 +3,27 @@ import _sqlite3, csv
 # FUNCIÓN QUE BORRA TABLAS: BD.borrar_tabla(tabla = "")
 # BD.borrar_tabla(tabla="security")
 
+# --- SECURITY ---
 # FUNCIÓN QUE CREA LA TABLA (security): 
 # BD.crear_tabla_security()
 
 # FUNCIÓN QUE AÑADE DATOS INCIALES A SECURITY:
 # BD.añadir_datos_security(users, hashed_passwords, sexo, edad, correo, email_status)
+
+
+# --- WEIGHT ---
+# FUNCIÓN QUE CREA LA TABLA (weight): 
+# BD.crear_tabla_weight()
+
+# FUNCIÓN QUE AÑADE DATOS INCIALES A weight:
+# BD.añdir_datos_weight_from_csv()
+
+# --- STEPS ---
+# FUNCIÓN QUE CREA LA TABLA (steps): 
+# BD.crear_tabla_steps()
+
+# FUNCIÓN QUE AÑADE DATOS INCIALES A steps:
+# BD.añdir_datos_steps_from_csv()
 
 users = ["Juan García", "María Rodríguez", "Alejandro Martínez", "Sofía López", "Carlos Fernández", "Ana Pérez", "Luis González", "Elena Ruiz", "Diego Sánchez", "Carmen Gómez"]
 
@@ -27,7 +43,7 @@ for i in range(len(contraseña_txtplano)):
     hashed_passwords.append(BD.hasher(password=contraseña_txtplano[i]))
 
 
-BD.borrar_tabla(tabla="weight")
-BD.crear_tabla_weight()
+BD.borrar_tabla(tabla="steps")
+BD.crear_tabla_steps()
 
-BD.añadir_datos_weight_from_csv()
+BD.añadir_datos_steps_from_csv()
