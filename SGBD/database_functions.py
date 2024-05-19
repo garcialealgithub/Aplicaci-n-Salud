@@ -213,6 +213,26 @@ def setup_sleep_table_from_csv(csv_file,database="database.db"):
 def hasher(password):
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     
+# Función que comprueba si el hash coincide con la contraseña (devuelve True o False)
+def comprobar_hash(password, hashed_password):
+    comprobacion = bcrypt.checkpw(password.encode(), hashed_password)
+    return comprobacion
+
+# Buscar que hace
+def password_verification(usuario):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    consulta = f"SELECT password FROM security WHERE user = ?;"
+    cursor.execute(consulta, (usuario,))
+    resultado = cursor.fetchone()
+    db.commit()
+    db.close()
+
+    if resultado:
+        return resultado[0]
+    else:
+        return "Usuario no encontrado"
+
 
 # WRITTING TO DATABASE FUNCTIONS
 

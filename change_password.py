@@ -2,7 +2,7 @@ from tkinter import *
 import SGBD.verifications as v
 from tkinter import messagebox
 import mainWindow as mW
-import SGBD.base_datos as BD
+import SGBD.database_functions as BD
 
 # Clase que representa la ventana de cambio de contraseña o verificación de correo
 class UserActions:

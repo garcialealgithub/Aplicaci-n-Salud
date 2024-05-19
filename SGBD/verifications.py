@@ -1,5 +1,5 @@
 import os, random, sqlite3, smtplib
-import SGBD.base_datos as BD
+import SGBD.database_functions as BD
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

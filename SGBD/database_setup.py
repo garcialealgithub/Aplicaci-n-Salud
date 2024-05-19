@@ -1,4 +1,4 @@
-import database_functions as BD
+import SGBD.database_functions as BD
 
 #Setup of all the tables
 try:
