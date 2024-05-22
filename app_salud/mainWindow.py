@@ -140,14 +140,19 @@ class MainWindow:
     def verEjercicios(self):
         self.modo_ejercicios = True
         self.actualizar_interfaz()
+
+    def mandar_seleccion(self, event):
+        self.respuesta = api.InfoEjercicios(self.seleccion.get())
+        
     
     def actualizar_interfaz(self):
         if self.modo_ejercicios:
             # Si estamos en modo ejercicios, muestra el Combobox
             if self.seleccion is None:  # Solo crea si no existe
                 self.seleccion = ttk.Combobox(self.root, values=api.musculos, state='readonly')
-                self.seleccion.pack()
-                self.seleccion.bind('<<ComboboxSelected>>', self.InfoEjercicios)
+                self.seleccion.place(x=8, y=8)
+                self.seleccion.bind("<<ComboboxSelected>>", self.mandar_seleccion)
+                
             self.fondo.lower()  # Manda el fondo a la capa inferior
         else:
             # Si no estamos en modo ejercicios, asegúrate de que el fondo esté visible

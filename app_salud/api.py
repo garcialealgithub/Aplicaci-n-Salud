@@ -14,16 +14,14 @@ muscles = {'abdominales': 'abdominals', 'abductores': 'abductors', 'aductores': 
            'cuadriceps': 'quadriceps', 'trapezoide': 'traps', 'triceps': 'triceps'}
 
     
-def InfoEjercicios(self, event):
-    musc = self.seleccion.get()
-    elec = self.muscles[musc]
+def InfoEjercicios(musc):
+    musc = muscles[musc]
     headers={'X-Api-Key': 'g2xoHUNZk0IS0LxgIGipfA==qpzPJy4SCD1SV9gg'}
-    api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format(elec) # Si no está, salta al error
+    api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format(musc) # Si no está, salta al error
     response = requests.get(api_url, headers)
     if response.status_code == requests.codes.ok:
         respuesta = ast.literal_eval(response.text)
-        print(type(respuesta))
-        print(respuesta)
+        return respuesta
     else:
         print("Error:", response.status_code, response.text)
 
