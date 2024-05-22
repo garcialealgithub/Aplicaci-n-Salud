@@ -5,11 +5,9 @@ import app_salud.mainWindow as mW
 import app_salud.change_password as cp
 
 class VerifyEmailWindow(cp.UserActions):
-    def __init__(self, user, password, root):
-        super().__init__(user, password, root, "Verificar correo")
-        self.root = root
-        self.user = user
-        self.password = password
+    def __init__(self, user, password, color, root):
+        super().__init__(user, password, color, root, "Verificar correo")
+        
         
         self.frame = Frame(self.root, width = 300, height = 400)
         self.frame.place(x = 0, y = 0)
@@ -64,5 +62,5 @@ class VerifyEmailWindow(cp.UserActions):
     def backtomain(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
-        mW.MainWindow(self.user, self.password, new_root)
+        mW.MainWindow(self.user, self.password, self.color, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)

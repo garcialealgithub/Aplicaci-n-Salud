@@ -57,14 +57,13 @@ class Login(preWindow):
                 
                 self.root.withdraw()
                 new_root = Toplevel(self.root)
-                print('tupu')
-                mainWindow = mW.MainWindow(self.user, self.password, new_root)
+                mainWindow = mW.MainWindow(self.user, self.password, 'Rojo', new_root)
                 new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
                 
             else:
                 messagebox.showerror("Error", "Usuario o contraseña incorrectos")
         except Exception as e:
-            messagebox.showerror("Error", e)   
+            messagebox.showerror("Error", 'Problema al iniciar sesión')   
             
 
     def register(self):
@@ -117,7 +116,7 @@ class Register(preWindow):
         mujer = Radiobutton(frameRegister, text="Mujer", variable=self.variable, value='F', command=sexChoose)
         mujer.place(relx=0.5, rely=0.78, anchor='w')
 
-        registerButton = Button(frameRegister, text="Registrarse", font=("Arial", 16), fg='white', bg='red', command=self.register_user)
+        registerButton = Button(frameRegister, text="Registrarse", font=("Arial", 16), fg='white', bg='red', command=self.register)
         registerButton.place(relx=0.53, rely=0.9, anchor='e')
 
         loginButton = Button(frameRegister, text="Iniciar sesión", font=("Arial", 12), command=self.login)
@@ -130,12 +129,17 @@ class Register(preWindow):
         login = Login(new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def register_user(self):
+    def register(self):
         try:
             self.usuario = self.Ruser_entry.get()
             self.contraseña = self.Rpassw_entry.get()
-            self.edad = int(self.Redad_entry.get())
-            self.sexo = self.sexo.get()
+
+            # Intentar convertir la edad a un entero
+            try:
+                self.edad = int(self.Redad_entry.get())
+            except ValueError:
+                messagebox.showerror("Error", "La edad debe ser un número")
+                return
 
             # Validar la contraseña con expresiones regulares
             if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', self.contraseña):
@@ -145,7 +149,7 @@ class Register(preWindow):
             # Hashear la contraseña si pasa la validación
             hashed_password = BD.hasher(self.contraseña)
 
-            if BD.add_security_table_row(self.usuario, password=hashed_password, age=self.edad, sex=self.sexo, email=None, verified_email=0):
+            if BD.add_security_table_row(self.usuario, password=hashed_password, age=self.edad, sex=self.sexo, email=None, everification=0):
                 messagebox.showinfo("Correcto", "Usuario registrado correctamente")
         except Exception as e:
             messagebox.showerror("Error", str(e))

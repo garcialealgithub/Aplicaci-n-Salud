@@ -7,10 +7,11 @@ import re
 
 # Clase que representa la ventana de cambio de contraseña o verificación de correo
 class UserActions:
-    def __init__(self, user, password, root, title):
+    def __init__(self, user, password, color, root, title):
         self.user = user
         self.password = password
         self.root = root
+        self.color = color
         self.root.title(title)
         self.root.geometry("300x400")
         
@@ -20,11 +21,8 @@ class UserActions:
 
 # Clase para ventana de cambio de contraseña
 class ChangePassword(UserActions):
-    def __init__(self, user, password, root):
-        super().__init__(user, password, root, "Cambiar contraseña")
-        self.user = user
-        self.password = password
-        self.root = root
+    def __init__(self, user, password, color, root):
+        super().__init__(user, password, color, root, "Cambiar contraseña")
         
         self.frame = Frame(self.root, width=300, height=400)
         self.frame.place(x=0, y=0)
@@ -61,27 +59,27 @@ class ChangePassword(UserActions):
     def backtomain(self):
         self.root.withdraw()
         new_root = Toplevel()
-        mW.MainWindow(self.user, self.password, new_root)
+        mW.MainWindow(self.user, self.new_password1, self.color, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
         
 
     def change_password(self):
         try:
             entry_code = self.entryCode.get()
-            self.password = self.entryPassw1.get()
+            self.new_password1 = self.entryPassw1.get()
             self.new_password2 = self.entryPassw2.get()
             
             # Expresiones regulares para validación
             code_pattern = re.compile(r'^\d{6}$')  # Código de verificación de 6 dígitos
             password_pattern = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')  # Contraseña con al menos 8 caracteres, una letra y un número
             
-            if self.password == self.new_password2:
+            if self.new_password1 == self.new_password2:
                 if code_pattern.match(entry_code):
-                    if password_pattern.match(self.password):
+                    if password_pattern.match(self.new_password1):
                         if int(entry_code) == int(self.code):
-                            if BD.update_security_table_row(user=self.user, password=BD.hasher(self.password), database='app_salud/SGBD/database.db'):
+                            if BD.update_security_table_row(user=self.user, password=BD.hasher(self.new_password1), database='app_salud/SGBD/database.db'):
                                 messagebox.showinfo("Correcto", "Contraseña cambiada")
-                                self.backtomain(self)
+                                self.backtomain()
                             else:
                                 messagebox.showerror("Error", "No se ha podido cambiar la contraseña")
                         else:
