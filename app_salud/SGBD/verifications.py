@@ -1,5 +1,5 @@
 import os, random, sqlite3, smtplib
-import app_salud.SGBD.database_functions as BD
+import database_functions as BD
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -9,7 +9,10 @@ from tkinter import messagebox
 
 # Creamos el código de verificación o cambio de contraseña
 def crear_codigo():
-    codigo = random.randint(100000, 999999)
+    codigo = ""
+    for i in range(6):
+        num = random.randint(0, 6)
+        codigo += str(num)
     return codigo
 
 
@@ -83,3 +86,5 @@ def email_verificated(user):
     db.commit()
     db.close()
     return verificated
+
+print(crear_codigo())
