@@ -61,25 +61,25 @@ class ChangePassword(UserActions):
     def backtomain(self):
         self.root.withdraw()
         new_root = Toplevel()
-        mW.MainWindow(self.user, self.new_password1, new_root)
+        mW.MainWindow(self.user, self.password, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
         
 
     def change_password(self):
         try:
             entry_code = self.entryCode.get()
-            self.new_password1 = self.entryPassw1.get()
+            self.password = self.entryPassw1.get()
             self.new_password2 = self.entryPassw2.get()
             
             # Expresiones regulares para validación
             code_pattern = re.compile(r'^\d{6}$')  # Código de verificación de 6 dígitos
             password_pattern = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')  # Contraseña con al menos 8 caracteres, una letra y un número
             
-            if self.new_password1 == self.new_password2:
+            if self.password == self.new_password2:
                 if code_pattern.match(entry_code):
-                    if password_pattern.match(self.new_password1):
+                    if password_pattern.match(self.password):
                         if int(entry_code) == int(self.code):
-                            if BD.update_security_table_row(user=self.user, password=BD.hasher(self.new_password1), database='app_salud/SGBD/database.db'):
+                            if BD.update_security_table_row(user=self.user, password=BD.hasher(self.password), database='app_salud/SGBD/database.db'):
                                 messagebox.showinfo("Correcto", "Contraseña cambiada")
                                 self.backtomain(self)
                             else:
