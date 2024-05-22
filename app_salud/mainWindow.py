@@ -27,10 +27,9 @@ class MainWindow:
         self.usuario = user
         self.password = password
         self.color = color
-        print(self.color)
         self.modo_ejercicios = False
         self.seleccion = self.ejercicios = None
-        self.nombres = []
+        self.nombres = StringVar(value=[])
         
         # Frame principal
         self.framePrincipal = Frame(self.root, width=800, height=600)
@@ -92,7 +91,7 @@ class MainWindow:
         self.button3 = Button(self.buttons, text="Botón 3", width=10, height=2)
         self.button3.grid(column=3, row=0, pady=60, padx=60)
 
-        self.button4 = Button(self.buttons, text="Botón 4", width=10, height=2)
+        self.button4 = Button(self.buttons, text="Botón 4", width=10, height=2, command=self.limpiarPantalla)
         self.button4.grid(column=4, row=0, pady=60, padx=60)
 
         self.button5 = Button(self.buttons, text="Botón 5", width=10, height=2, command=self.verEjercicios)
@@ -100,6 +99,12 @@ class MainWindow:
     
 
     ## Funciones de los botones ##
+
+    def limpiarPantalla(self):
+        self.fondo.lift()
+        self.modo_ejercicios = False
+        self.actualizar_interfaz()
+
     def logout(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
@@ -138,13 +143,14 @@ class MainWindow:
     def on_closing(self):
         self.root.destroy()
     
+    # Funciones para selección de ejercicios
     def verEjercicios(self):
         self.modo_ejercicios = True
         self.actualizar_interfaz()
 
     def mandar_seleccion(self, event):
         self.respuesta = api.InfoEjercicios(self.seleccion.get())
-        self.nombres = api.Nombres(self.respuesta)
+        self.nombres = StringVar(value = api.Nombres(self.respuesta))
         self.actualizar_interfaz()
         
         
@@ -152,11 +158,13 @@ class MainWindow:
         if self.modo_ejercicios:
             # Si estamos en modo ejercicios, muestra el Combobox
             if self.seleccion is None:  # Solo crea si no existe
-                self.seleccion = ttk.Combobox(self.pantalla, values=api.musculos, state='readonly')
+                self.ComboFrame = Frame(self.pantalla, relief='groove', width=170, height=200)
+                self.ComboFrame.place(x=0, y=0)
+                self.seleccion = ttk.Combobox(self.ComboFrame, values=api.musculos, state='readonly')
                 self.seleccion.place(x=8, y=8)
                 self.seleccion.bind("<<ComboboxSelected>>", self.mandar_seleccion)
                 
-            self.ejercicios = Listbox(self.pantalla, listvariable=self.nombres, height=10)
+            self.ejercicios = Listbox(self.ComboFrame, listvariable=self.nombres)
             self.ejercicios.place(x=8, y=30)
             self.fondo.lower()  # Manda el fondo a la capa inferior
         else:
@@ -165,3 +173,5 @@ class MainWindow:
             if self.seleccion is not None:
                 self.seleccion.pack_forget()  # Oculta el Combobox
                 self.seleccion = None  # Resetea el Combobox a None
+                self.ejercicios.pack_forget()
+                self.ejercicios = StringVar(value=[])
