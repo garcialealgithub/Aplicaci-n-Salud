@@ -1,7 +1,6 @@
 import sqlite3
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
 
 def grafico_peso(user, date, dias, color):
     # Conectar a la base de datos SQLite
@@ -44,14 +43,11 @@ def grafico_peso(user, date, dias, color):
     plt.grid(True)
     plt.xticks(rotation=45)
     
-    # Verificar si el directorio de destino existe, si no, créalo
-    directorio_destino = 'app_salud/GRAFOS/grafos_images/peso'
-    if not os.path.exists(directorio_destino):
-        os.makedirs(directorio_destino)
-    
     # Mostrar el gráfico
     plt.tight_layout()
-    plt.savefig(f'{directorio_destino}/peso_{user}_{date}.png')  # Guardar la imagen en la ubicación especificada
+    plt.savefig('GRAFOS/grafos_images/grafico_peso.png')  # Guardar la imagen en la ubicación especificada
+    plt.show()
+
 
 
 def grafico_pasos(user, date, dias, color):
@@ -95,17 +91,10 @@ def grafico_pasos(user, date, dias, color):
     plt.grid(True)
     plt.xticks(rotation=45)
     
-    # Verificar si el directorio de destino existe, si no, créalo
-    directorio_destino = 'app_salud/GRAFOS/grafos_images/pasos'
-    if not os.path.exists(directorio_destino):
-        os.makedirs(directorio_destino)
-    
     # Mostrar el gráfico
     plt.tight_layout()
-    plt.savefig(f'{directorio_destino}/pasos_{user}_{date}.png')  # Guardar la imagen en la ubicación especificada
-    
+    plt.show()
 
 # Ejemplo de uso
-grafico_peso('Ana Pérez', '2024-05-16', 3, color="darkblue")
-
 grafico_pasos('Ana Pérez', '2024-05-16', 3, color="darkblue")
+
