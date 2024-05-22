@@ -1,26 +1,44 @@
 import requests
 import tkinter
 from tkinter import ttk
+from PIL import Image, ImageTk
 
 # g2xoHUNZk0IS0LxgIGipfA==qpzPJy4SCD1SV9gg -> código (uso limitado a 10k)
 # https://api.api-ninjas.com/v1/exercises?muscle={} -> api url para músculos
 
+def InfoEjercicios(event):
+    musc = seleccion.get()
+    elec = muscles[musc]
+    headers={'X-Api-Key': 'código'}
+    api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format(elec) # Si no está, salta al error
+    response = requests.get(api_url, headers)
+    if response.status_code == requests.codes.ok:
+        respuesta = response.text
+        return respuesta
+    else:
+        print("Error:", response.status_code, response.text)
+
+# Todas las posibilidades del desplegable
 musculos = ["abdominales","abductores", "aductores", "biceps", "pantorrillas", "pecho", "antebrazos", "gluteos",
             "isquiotibiales", "dorsales", "espalda inferior", "media espalda", "cuello", "cuadriceps", "trapezoide", "triceps"]
+
+# Relacionamos el desplegable con el valor de API correspondiente
 muscles = {'abdominales': 'abdominals', 'abductores': 'abductors', 'aductores': 'adductors', 'biceps': 'biceps',
            'pantorrillas': 'calves', 'pecho': 'chest', 'antebrazos': 'forearms', 'gluteos': 'glutes', 'isquiotibiales': 'hamstrings',
            'dorsales': 'lats', 'espalda inferior': 'lower_back', 'media espalda': 'middle_back', 'cuello': 'neck',
            'cuadriceps': 'quadriceps', 'trapezoide': 'traps', 'triceps': 'triceps'}
 
-enunciado = tkinter.Label(text='Selecciona músculo a entrenar:')
-seleccion = ttk.Combobox(values=musculos, state='readonly')
+# ventana = tkinter.tk() # Para la ventana
+# frame = tkinter.Frame(ventana) # Crea un bloque
+# desplegable = tkinter.LabelFrame(frame) # Bloque dentro de bloque
+# desplegable.grid(row=0, column=0)
 
-def Ejercicios(event):
-    headers={'X-Api-Key': 'código'}
-    api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format() # Si no está, salta al error
-    response = requests.get(api_url, headers)
-    if response.status_code == requests.codes.ok:
-        respuesta = response.text
-        print(respuesta)
-    else:
-        print("Error:", response.status_code, response.text)
+# Creamos el desplegable
+enunciado = tkinter.Label(text='Selecciona músculo a entrenar:') # dentro de (), 1º valor (desplegable)
+enunciado.grid(row=0, column=0)
+seleccion = ttk.Combobox(values=musculos, state='readonly') # dentro de (), 1º valor (desplegable)
+seleccion.grid(row=1, column=0)
+# 
+
+# especificaciones = tkinter.LabelFrame(frame)
+# especificaciones.grid(row=1, column=0, sticky="news", padx= , pady=)
