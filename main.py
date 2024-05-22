@@ -1,6 +1,7 @@
-import inicio_sesion as init
+import login as login
 from tkinter import *
 
 if __name__ == "__main__":
-        
-        login = init.Login()
+        root = Tk()
+        login = login.Login(root)
+        root.mainloop()

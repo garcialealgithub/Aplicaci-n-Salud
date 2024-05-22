@@ -1,30 +1,26 @@
-import os, random, sqlite3
-import SGBD.base_datos as BD
-import smtplib
+import os, random, sqlite3, smtplib
+import SGBD.database_functions as BD
+
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
+import random
+from tkinter import messagebox
 
 # Creamos el código de verificación o cambio de contraseña
 def crear_codigo():
-    codigo = ""
-    for i in range(6):
-        numero = random.randint(0, 9)
-        codigo += str(numero)
-    
+    codigo = random.randint(100000, 999999)
     return codigo
 
 
 # Función que manda un correo con el código de verificación
 def send_mail(email, subject):
-
+    
     # Cargar variables de entorno desde el archivo .env
     load_dotenv()
 
     remitente = "Soporte HEALTHSYNC"
     destinatarios = email
-
-
 
     codigo_verificacion = crear_codigo()
     # Mensaje en formato HTML
@@ -69,24 +65,22 @@ def send_mail(email, subject):
     
     return codigo_verificacion
 
-def code_verification(email, subject):
-    code = send_mail(email, subject)
-    user_code = input("Código: ")
-    if user_code == code:
-        print("Código correcto")
+
+def verify_email(user, email):
+    try:
+        BD.insert_user_email(user, email)
+        BD.update_email_status(user, future_status=1)
         return True
-    else:
-        print("Código incorrecto")
+    except:
+        messagebox.showerror("Error", "No se ha podido verificar el correo")
         return False
-
-
-def email_verification(email):
-
-    if code_verification(email, subject = "VERIFICACIÓN EMAIL"):
-        BD.update_email_status(user= BD.saber_user_con_email(email), future_status=1)
-        print(f"El correo {email} ha sido verificado correctamente")
-    else:
-        #SE MANTIENE EL ESTADO FALSE
-        print("No se ha podido verificar el correo")
-
-
+        
+def email_verificated(user):
+    db = sqlite3.connect("SGBD/data.db")
+    cursor = db.cursor()
+    cursor.execute("SELECT everification from security where user = ?", (user,))
+    verificated = cursor.fetchone()[0] == 1
+    
+    db.commit()
+    db.close()
+    return verificated
