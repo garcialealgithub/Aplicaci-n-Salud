@@ -1,0 +1,23 @@
+import requests
+
+# g2xoHUNZk0IS0LxgIGipfA==qpzPJy4SCD1SV9gg -> código (uso limitado a 10k)
+# https://api.api-ninjas.com/v1/exercises?muscle={} -> api url para músculos
+
+headers={'X-Api-Key': 'código'}
+muscles = {'abdominales': 'abdominals', 'abductores': 'abductors', 'aductores': 'adductors', 'biceps': 'biceps',
+           'pantorrillas': 'calves', 'pecho': 'chest', 'antebrazos': 'forearms', 'gluteos': 'glutes', 'isquiotibiales': 'hamstrings',
+           'dorsales': 'lats', 'espalda_inferior': 'lower_back', 'espalda_media': 'middle_back', 'cuello': 'neck',
+           'cuadriceps': 'quadriceps', 'trapezoide': 'traps', 'triceps': 'triceps'}
+
+musculo = input()
+musculo = musculo.replace(' ', '_')
+if musculo in muscles:
+    musculo = muscles[musculo]
+
+api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format(musculo) # Si no está, salta al error
+response = requests.get(api_url, headers)
+if response.status_code == requests.codes.ok:
+    respuesta = response.text
+    print(respuesta)
+else:
+    print("Error:", response.status_code, response.text)
