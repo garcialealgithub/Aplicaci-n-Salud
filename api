@@ -6,11 +6,10 @@ import requests
 headers={'X-Api-Key': 'código'}
 muscles = {'abdominales': 'abdominals', 'abductores': 'abductors', 'aductores': 'adductors', 'biceps': 'biceps',
            'pantorrillas': 'calves', 'pecho': 'chest', 'antebrazos': 'forearms', 'gluteos': 'glutes', 'isquiotibiales': 'hamstrings',
-           'dorsales': 'lats', 'espalda_inferior': 'lower_back', 'espalda_media': 'middle_back', 'cuello': 'neck',
+           'dorsales': 'lats', 'espalda inferior': 'lower_back', 'media espalda': 'middle_back', 'cuello': 'neck',
            'cuadriceps': 'quadriceps', 'trapezoide': 'traps', 'triceps': 'triceps'}
 
 musculo = input()
-musculo = musculo.replace(' ', '_')
 if musculo in muscles:
     musculo = muscles[musculo]
 
