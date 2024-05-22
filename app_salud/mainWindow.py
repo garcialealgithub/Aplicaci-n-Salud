@@ -153,25 +153,54 @@ class MainWindow:
         self.nombres = StringVar(value = api.Nombres(self.respuesta))
         self.actualizar_interfaz()
         
-        
+    def visualizacion_ejercicios(self):
+        self.miniatura = Frame(self.pantalla, width=178, height=204, relief='groove', border=8)
+        self.miniatura.place(x=0, y=230)
+
+        self.mainInfo = Frame(self.pantalla, width=415, height=434, relief='groove', border=8)
+        self.mainInfo.place(x=178, y=0)
+
+        self.title = Label(self.mainInfo, text=self.ejercicio, font=("Arial", 20))
+        self.title.place(relx=0.5, rely=0.1, anchor=CENTER)
+
+    def on_select(self, event):
+        # Obtener el widget Listbox
+        self.ejercicios = event.widget
+        # Obtener el índice del elemento seleccionado
+        index = self.ejercicios.curselection()
+        # Obtener el valor del elemento seleccionado
+        if index:
+            self.ejercicio = self.ejercicios.get(index[0])
+            self.visualizacion_ejercicios()
+            
+
+
     def actualizar_interfaz(self):
         if self.modo_ejercicios:
             # Si estamos en modo ejercicios, muestra el Combobox
             if self.seleccion is None:  # Solo crea si no existe
-                self.ComboFrame = Frame(self.pantalla, relief='groove', width=170, height=200)
+                self.ComboFrame = Frame(self.pantalla, relief='groove', border=8, width=178, height=230)
                 self.ComboFrame.place(x=0, y=0)
                 self.seleccion = ttk.Combobox(self.ComboFrame, values=api.musculos, state='readonly')
                 self.seleccion.place(x=8, y=8)
                 self.seleccion.bind("<<ComboboxSelected>>", self.mandar_seleccion)
                 
+
+
             self.ejercicios = Listbox(self.ComboFrame, listvariable=self.nombres)
             self.ejercicios.place(x=8, y=30)
+            self.ejercicios.bind("<<ListboxSelect>>", self.on_select)
             self.fondo.lower()  # Manda el fondo a la capa inferior
+            
+
         else:
             # Si no estamos en modo ejercicios, asegúrate de que el fondo esté visible
             self.fondo.lift()  # Manda el fondo a la capa superior
             if self.seleccion is not None:
                 self.seleccion.pack_forget()  # Oculta el Combobox
-                self.seleccion = None  # Resetea el Combobox a None
+                self.seleccion = self.ejercicio = None  # Resetea el Combobox a None
                 self.ejercicios.pack_forget()
+                self.miniatura.pack_forget()
+                self.ComboFrame.pack_forget()
+                self.mainInfo.pack_forget()
                 self.ejercicios = StringVar(value=[])
