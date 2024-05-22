@@ -17,6 +17,7 @@ class MainWindow:
         # Imágenes
         self.Mbg = PhotoImage(file="app_salud/images/main_bg.png")
         self.userImg = PhotoImage(file="app_salud/images/userImg.png")
+        self.confImg = PhotoImage(file="app_salud/images/configuration.png")
 
         # Parámetros de ventana de usuario
         self.usuario = user
@@ -39,7 +40,7 @@ class MainWindow:
         self.userImg = Label(self.userframe, image=self.userImg)
         self.userImg.place(relx=0.5, rely=0.2, anchor=CENTER)
         
-        # Botones de la ventana de usuario
+        ## Botones de la ventana de usuario
         
         # Botones que solo aparecen si el correo está verificado
         if not verf.email_verificated(user):
@@ -69,7 +70,10 @@ class MainWindow:
         self.fondo.place(x=0, y=0, relwidth=1, relheight=1)
 
 
-        ## Botones de la ventana principal ##     
+        ## Botones de la ventana principal ## 
+        self.confButton = Button(self.pantalla, image=confImg, width=10, height=2)
+        self.confButton.place(x=0, y=0)
+
         self.buttons = Frame(self.framePrincipal, width=800, height=150, bg='gray')
         self.buttons.place(x=0, y=450)
         
