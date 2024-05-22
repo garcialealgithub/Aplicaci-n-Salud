@@ -1,26 +1,29 @@
-import requests
-import tkinter
+import tkinter as tk
+from tkinter import PhotoImage
 from tkinter import ttk
+import requests
+import ast
 
-# g2xoHUNZk0IS0LxgIGipfA==qpzPJy4SCD1SV9gg -> código (uso limitado a 10k)
-# https://api.api-ninjas.com/v1/exercises?muscle={} -> api url para músculos
 
 musculos = ["abdominales","abductores", "aductores", "biceps", "pantorrillas", "pecho", "antebrazos", "gluteos",
             "isquiotibiales", "dorsales", "espalda inferior", "media espalda", "cuello", "cuadriceps", "trapezoide", "triceps"]
+
 muscles = {'abdominales': 'abdominals', 'abductores': 'abductors', 'aductores': 'adductors', 'biceps': 'biceps',
            'pantorrillas': 'calves', 'pecho': 'chest', 'antebrazos': 'forearms', 'gluteos': 'glutes', 'isquiotibiales': 'hamstrings',
            'dorsales': 'lats', 'espalda inferior': 'lower_back', 'media espalda': 'middle_back', 'cuello': 'neck',
            'cuadriceps': 'quadriceps', 'trapezoide': 'traps', 'triceps': 'triceps'}
 
-enunciado = tkinter.Label(text='Selecciona músculo a entrenar:')
-seleccion = ttk.Combobox(values=musculos, state='readonly')
-
-def Ejercicios(event):
-    headers={'X-Api-Key': 'código'}
-    api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format() # Si no está, salta al error
+    
+def InfoEjercicios(self, event):
+    musc = self.seleccion.get()
+    elec = self.muscles[musc]
+    headers={'X-Api-Key': 'g2xoHUNZk0IS0LxgIGipfA==qpzPJy4SCD1SV9gg'}
+    api_url = 'https://api.api-ninjas.com/v1/exercises?muscle={}'.format(elec) # Si no está, salta al error
     response = requests.get(api_url, headers)
     if response.status_code == requests.codes.ok:
-        respuesta = response.text
+        respuesta = ast.literal_eval(response.text)
+        print(type(respuesta))
         print(respuesta)
     else:
         print("Error:", response.status_code, response.text)
+

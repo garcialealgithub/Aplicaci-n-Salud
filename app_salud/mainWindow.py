@@ -1,10 +1,12 @@
 from tkinter import *
+from tkinter import ttk
 import app_salud.login as login
 import app_salud.SGBD.verifications as verf
 import app_salud.verify_email_window as verfWindow
 import app_salud.change_password as cp
 import app_salud.SGBD.database_functions as BD
 import app_salud.graphconfig as gconfig
+import app_salud.api as api
 
 
 
@@ -26,6 +28,8 @@ class MainWindow:
         self.password = password
         self.color = color
         print(self.color)
+        self.modo_ejercicios = False
+        self.seleccion = None
         
         # Frame principal
         self.framePrincipal = Frame(self.root, width=800, height=600)
@@ -90,7 +94,7 @@ class MainWindow:
         self.button4 = Button(self.buttons, text="Botón 4", width=10, height=2)
         self.button4.grid(column=4, row=0, pady=60, padx=60)
 
-        self.button5 = Button(self.buttons, text="Botón 5", width=10, height=2)
+        self.button5 = Button(self.buttons, text="Botón 5", width=10, height=2, command=self.verEjercicios)
         self.button5.grid(column=5, row=0, pady=60, padx=60)
     
 
@@ -133,3 +137,21 @@ class MainWindow:
     def on_closing(self):
         self.root.destroy()
     
+    def verEjercicios(self):
+        self.modo_ejercicios = True
+        self.actualizar_interfaz()
+    
+    def actualizar_interfaz(self):
+        if self.modo_ejercicios:
+            # Si estamos en modo ejercicios, muestra el Combobox
+            if self.seleccion is None:  # Solo crea si no existe
+                self.seleccion = ttk.Combobox(self.root, values=api.musculos, state='readonly')
+                self.seleccion.pack()
+                self.seleccion.bind('<<ComboboxSelected>>', self.InfoEjercicios)
+            self.fondo.lower()  # Manda el fondo a la capa inferior
+        else:
+            # Si no estamos en modo ejercicios, asegúrate de que el fondo esté visible
+            self.fondo.lift()  # Manda el fondo a la capa superior
+            if self.seleccion is not None:
+                self.seleccion.pack_forget()  # Oculta el Combobox
+                self.seleccion = None  # Resetea el Combobox a None
