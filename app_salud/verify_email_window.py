@@ -1,8 +1,8 @@
 from tkinter import *
-import SGBD.verifications as v
+import app_salud.SGBD.verifications as v
 from tkinter import messagebox
-import mainWindow as mW
-import change_password as cp
+import app_salud.mainWindow as mW
+import app_salud.change_password as cp
 
 class VerifyEmailWindow(cp.UserActions):
     def __init__(self, user, password, root):
@@ -54,7 +54,7 @@ class VerifyEmailWindow(cp.UserActions):
             if int(self.entrycode.get()) == self.code:
                 v.verify_email(self.user, self.email)
                 messagebox.showinfo('Correcto', 'Correo verificado')
-                backtomain()
+                self.backtomain()
                 
             else:
                 messagebox.showerror("Error", "Código incorrecto")

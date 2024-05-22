@@ -1,9 +1,9 @@
 from tkinter import *
-import login as login
-import SGBD.verifications as v
-import verify_email_window as vw
-import change_password as cp
-import SGBD.base_datos as BD
+import app_salud.login as login
+import app_salud.SGBD.verifications as verf
+import app_salud.verify_email_window as verfWindow
+import app_salud.change_password as cp
+import app_salud.SGBD.database_functions as BD
 
 
 ## Clase ventana principal. Representa la ventana principal del programa
@@ -15,8 +15,8 @@ class MainWindow:
         self.root.resizable(width=False, height=False)
         
         # Imágenes
-        self.Mbg = PhotoImage(file="images/main_bg.png")
-        self.userImg = PhotoImage(file="images/userImg.png")
+        self.Mbg = PhotoImage(file="app_salud/images/main_bg.png")
+        self.userImg = PhotoImage(file="app_salud/images/userImg.png")
 
         # Parámetros de ventana de usuario
         self.usuario = user
@@ -42,7 +42,7 @@ class MainWindow:
         # Botones de la ventana de usuario
         
         # Botones que solo aparecen si el correo está verificado
-        if not v.email_verificated(user):
+        if not verf.email_verificated(user):
             verifyEmailButton = Button(self.userframe, text="Verificar correo", font=("Arial", 13), bg="gray", 
                 fg="black", command=self.verifyEmail)
             verifyEmailButton.place(relx=0.5, rely=0.6, anchor=CENTER)
@@ -112,7 +112,7 @@ class MainWindow:
     def verifyEmail(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
-        vw.VerifyEmailWindow(self.usuario, self.password, new_root)
+        verfWindow.VerifyEmailWindow(self.usuario, self.password, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
             
     # Función de cierre de ventana

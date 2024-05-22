@@ -1,8 +1,8 @@
 from tkinter import *
-import tkinter as tk
 from tkinter import messagebox
-import SGBD.base_datos as BD
-import mainWindow as mW
+import app_salud.SGBD.database_functions as BD
+import app_salud.mainWindow as mW
+import re
 
 # Clase pre ventana. Representa una ventana de la aplicación de inicio de sesión o  registro
 class preWindow:
@@ -11,8 +11,9 @@ class preWindow:
         self.root.title(title)
         self.root.geometry("600x600")
         self.root.resizable(0, 0)
+        self.bag = PhotoImage(file="app_salud/images/background.png")
         
-        self.icon = PhotoImage(file="images/icon.png")
+        self.icon = PhotoImage(file="app_salud/images/icon.png")
         self.root.iconphoto(True, self.icon)
 
     def on_closing(self):
@@ -21,21 +22,21 @@ class preWindow:
 class Login(preWindow):
     def __init__(self, root):
         super().__init__(root, "Inicio de sesión")
-        self.bag = PhotoImage(file="images/background.png")
+        
         background = Label(self.root, image=self.bag)
         background.place(x=0, y=0, relwidth=1, relheight=1)
 
         frameLogin = Frame(self.root, width=270, height=360, bg="white", relief='ridge', border=8)
         frameLogin.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        user = Label(frameLogin, text="Usuario:", font=("Arial", 14))
-        user.place(relx=0.5, rely=0.2, anchor=CENTER)
+        userTxt = Label(frameLogin, text="Usuario:", font=("Arial", 14))
+        userTxt.place(relx=0.5, rely=0.2, anchor=CENTER)
 
         self.user_entry = Entry(frameLogin, font=("Arial", 12), justify="center")
         self.user_entry.place(relx=0.5, rely=0.3, anchor=CENTER)
 
-        password = Label(frameLogin, text="Contraseña:", font=("Arial", 14))
-        password.place(relx=0.5, rely=0.45, anchor=CENTER)
+        passwordTxt = Label(frameLogin, text="Contraseña:", font=("Arial", 14))
+        passwordTxt.place(relx=0.5, rely=0.45, anchor=CENTER)
 
         self.passw_entry = Entry(frameLogin, font=("Arial", 14), justify="center", show="*")
         self.passw_entry.place(relx=0.5, rely=0.55, anchor=CENTER)
@@ -50,20 +51,22 @@ class Login(preWindow):
 
     def login(self):
         try:
-            user = self.user_entry.get()
-            password = self.passw_entry.get()
-            if BD.comprobar_hash(password, BD.password_verification(usuario=user)):
+            self.user = self.user_entry.get()
+            self.password = self.passw_entry.get()
+            if BD.comprobar_hash(self.password, BD.password_verification(usuario=self.user)):
                 
                 self.root.withdraw()
                 new_root = Toplevel(self.root)
-                mainWindow = mW.MainWindow(user, password, new_root)
+                print('tupu')
+                mainWindow = mW.MainWindow(self.user, self.password, new_root)
                 new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+                
             else:
                 messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-        except:
-            messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+        except Exception as e:
+            messagebox.showerror("Error", e)   
             
-            
+
     def register(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
@@ -75,7 +78,7 @@ class Register(preWindow):
     def __init__(self, root):
         super().__init__(root, "Registro")
 
-        self.bag = PhotoImage(file="images/background.png")
+        
         background = Label(self.root, image=self.bag)
         background.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -128,16 +131,21 @@ class Register(preWindow):
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def register_user(self):
-        try:    
+        try:
             self.usuario = self.Ruser_entry.get()
             self.contraseña = self.Rpassw_entry.get()
             self.edad = int(self.Redad_entry.get())
-            self.sexo = self.sexo
+            self.sexo = self.sexo.get()
 
-            if BD.insert_user_info(self.usuario, BD.hasher(self.contraseña), 
-                    self.edad, self.sexo):
+            # Validar la contraseña con expresiones regulares
+            if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', self.contraseña):
+                messagebox.showerror("Error", "La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número")
+                return
+
+            # Hashear la contraseña si pasa la validación
+            hashed_password = BD.hasher(self.contraseña)
+
+            if BD.add_security_table_row(self.usuario, password=hashed_password, age=self.edad, sex=self.sexo, email=None, verified_email=0):
                 messagebox.showinfo("Correcto", "Usuario registrado correctamente")
-        except:
-            messagebox.showerror("Error", "Introduce datos válidos")
-
-
+        except Exception as e:
+            messagebox.showerror("Error", str(e))

@@ -1,5 +1,5 @@
 import os, random, sqlite3, smtplib
-import SGBD.database_functions as BD
+import app_salud.SGBD.database_functions as BD
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -61,22 +61,21 @@ def send_mail(email, subject):
         server.starttls()
         server.login(os.getenv("USER_MAIL"), os.getenv("PASSWORD"))
         server.sendmail(remitente, destinatarios, msg.as_string())
-        print("Correo enviado.")
+        print('codigo enviado')
     
     return codigo_verificacion
 
 
 def verify_email(user, email):
     try:
-        BD.insert_user_email(user, email)
-        BD.update_email_status(user, future_status=1)
+        BD.update_security_table_row(user=user, email=email, verified_email=True, database='app_salud/SGBD/database.db')
         return True
     except:
         messagebox.showerror("Error", "No se ha podido verificar el correo")
         return False
         
 def email_verificated(user):
-    db = sqlite3.connect("SGBD/data.db")
+    db = sqlite3.connect("app_salud/SGBD/database.db")
     cursor = db.cursor()
     cursor.execute("SELECT everification from security where user = ?", (user,))
     verificated = cursor.fetchone()[0] == 1

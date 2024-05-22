@@ -1,8 +1,9 @@
 import sqlite3, csv, bcrypt
+from tkinter import messagebox
 
 # SET UP OF THE DATABASE
 
-def setup_security_table_from_csv(csv_file,database="database.db"):
+def setup_security_table_from_csv(csv_file,database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -38,7 +39,7 @@ def setup_security_table_from_csv(csv_file,database="database.db"):
     db.commit()
     db.close()
     
-def setup_steps_table_from_csv(csv_file,database="database.db"):
+def setup_steps_table_from_csv(csv_file,database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -69,7 +70,7 @@ def setup_steps_table_from_csv(csv_file,database="database.db"):
     db.commit()
     db.close()
     
-def setup_weight_table_from_csv(csv_file,database="database.db"):
+def setup_weight_table_from_csv(csv_file,database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -99,7 +100,7 @@ def setup_weight_table_from_csv(csv_file,database="database.db"):
     db.commit()
     db.close()
     
-def setup_training_table_from_csv(csv_file,database="database.db"):
+def setup_training_table_from_csv(csv_file,database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -136,7 +137,7 @@ def setup_training_table_from_csv(csv_file,database="database.db"):
     db.commit()
     db.close()
     
-def setup_cardiac_frequency_table_from_csv(csv_file,database="database.db"):
+def setup_cardiac_frequency_table_from_csv(csv_file,database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -169,7 +170,7 @@ def setup_cardiac_frequency_table_from_csv(csv_file,database="database.db"):
     db.commit()
     db.close()
     
-def setup_sleep_table_from_csv(csv_file,database="database.db"):
+def setup_sleep_table_from_csv(csv_file,database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -209,7 +210,7 @@ def setup_sleep_table_from_csv(csv_file,database="database.db"):
 
 # AUXILIARY FUNCTIONS
 
-# Function that hashes the password of the users
+# Hashear las contraseñas añadidas a la base de datos
 def hasher(password):
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     
@@ -218,28 +219,54 @@ def comprobar_hash(password, hashed_password):
     comprobacion = bcrypt.checkpw(password.encode(), hashed_password)
     return comprobacion
 
-# Buscar que hace
+
 def password_verification(usuario):
-    db = sqlite3.connect("SGBD/data.db")
-    cursor = db.cursor()
-    consulta = f"SELECT password FROM security WHERE user = ?;"
-    cursor.execute(consulta, (usuario,))
-    resultado = cursor.fetchone()
-    db.commit()
-    db.close()
+    try:
+        db = sqlite3.connect("app_salud/SGBD/database.db")
+        cursor = db.cursor()
+        consulta = f"SELECT password FROM security WHERE user = ?;"
+        cursor.execute(consulta, (usuario,))
+        resultado = cursor.fetchone()
+        db.commit()
+        db.close()
 
-    if resultado:
-        return resultado[0]
+        if resultado:
+            return resultado[0]
+        else:
+            return "Usuario no encontrado"
+    except Exception as e:
+        print(e)
+
+def get_email_by_user(user, database='app_salud/SGBD/database.db'):
+    # Conectar a la base de datos
+    conn = sqlite3.connect(database)
+    cursor = conn.cursor()
+
+    # Crear la consulta SQL para buscar el correo electrónico por nombre de usuario
+    query = "SELECT email FROM security WHERE user = ?"
+
+    # Ejecutar la consulta con el nombre de usuario proporcionado
+    cursor.execute(query, (user,))
+
+    # Obtener el resultado de la consulta
+    result = cursor.fetchone()
+
+    # Cerrar la conexión
+    conn.close()
+
+    # Verificar si se encontró un resultado
+    if result:
+        return result[0]  # Devuelve el correo electrónico
     else:
-        return "Usuario no encontrado"
-
-
+        return None  # Devuelve None si no se encontró el correo electrónico
+    
+    
 # WRITTING TO DATABASE FUNCTIONS
 
 # update multiple rows of a table
 # (update the database through csv files)
 # Useful when a user is registrating, adding a lot of data at once...
-def update_security_table_from_csv(csv_file, database="database.db"):
+def update_security_table_from_csv(csv_file, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -270,7 +297,7 @@ def update_security_table_from_csv(csv_file, database="database.db"):
     db.commit()
     db.close()
     
-def update_steps_table_from_csv(csv_file, database="database.db"):
+def update_steps_table_from_csv(csv_file, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -299,7 +326,7 @@ def update_steps_table_from_csv(csv_file, database="database.db"):
     db.commit()
     db.close()
     
-def update_weight_table_from_csv(csv_file, database="database.db"):
+def update_weight_table_from_csv(csv_file, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -327,7 +354,7 @@ def update_weight_table_from_csv(csv_file, database="database.db"):
     db.commit()
     db.close()
     
-def update_training_table_from_csv(csv_file, database="database.db"):
+def update_training_table_from_csv(csv_file, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -359,7 +386,7 @@ def update_training_table_from_csv(csv_file, database="database.db"):
     db.commit()
     db.close()
     
-def update_cardiac_frequency_table_from_csv(csv_file, database="database.db"):
+def update_cardiac_frequency_table_from_csv(csv_file, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -389,7 +416,7 @@ def update_cardiac_frequency_table_from_csv(csv_file, database="database.db"):
     db.commit()
     db.close()
     
-def update_sleep_table_from_csv(csv_file, database="database.db"):
+def update_sleep_table_from_csv(csv_file, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -425,43 +452,47 @@ def update_sleep_table_from_csv(csv_file, database="database.db"):
 # update a row of a table
 # (update some value(s) related to an user)
 # Useful when a user wants to correct wrong data
-def update_security_table_row(user, password=None, age=None, sex=None, email=None, verified_email=None, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-    
-    # Initialize lists to hold parts of the SQL query
-    fields = []
-    values = []
+def update_security_table_row(user, password=None, age=None, sex=None, email=None, verified_email=None, database='app_salud/SGBD/database.db'):
+    try:
+        db = sqlite3.connect(database)
+        cursor = db.cursor()
+        
+        # Initialize lists to hold parts of the SQL query
+        fields = []
+        values = []
 
-    # Fill the lists
-    if password is not None:
-        fields.append("password = ?")
-        values.append(password)
-    if age is not None:
-        fields.append("age = ?")
-        values.append(age)
-    if sex is not None:
-        fields.append("sex = ?")
-        values.append(sex)
-    if email is not None:
-        fields.append("email = ?")
-        values.append(email)
-    if verified_email is not None:
-        fields.append("everification = ?")
-        values.append(verified_email)
+        # Fill the lists
+        if password is not None:
+            fields.append("password = ?")
+            values.append(password)
+        if age is not None:
+            fields.append("age = ?")
+            values.append(age)
+        if sex is not None:
+            fields.append("sex = ?")
+            values.append(sex)
+        if email is not None:
+            fields.append("email = ?")
+            values.append(email)
+        if verified_email is not None:
+            fields.append("everification = ?")
+            values.append(verified_email)
 
-    # Add the user to the end of the values list
-    values.append(user)
+        # Add the user to the end of the values list
+        values.append(user)
 
-    # Create the SQL query and execute it
-    if fields:
-        sql_query = f"UPDATE security SET {', '.join(fields)} WHERE user = ?"
-        cursor.execute(sql_query, values)
-        db.commit()
+        # Create the SQL query and execute it
+        if fields:
+            sql_query = f"UPDATE security SET {', '.join(fields)} WHERE user = ?"
+            cursor.execute(sql_query, values)
+            db.commit()
+        
+        db.close()
+        return True
+    except:
+        return False
 
-    db.close()
-
-def update_steps_table_row(user, date, steps, database='database.db'):
+def update_steps_table_row(user, date, steps, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -471,7 +502,7 @@ def update_steps_table_row(user, date, steps, database='database.db'):
     db.commit()
     db.close()
     
-def update_sleep_table_row(user, date, quality=None, duration=None, duration_deep_sleep=None, interruptions=None, database='database.db'):
+def update_sleep_table_row(user, date, quality=None, duration=None, duration_deep_sleep=None, interruptions=None, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -505,7 +536,7 @@ def update_sleep_table_row(user, date, quality=None, duration=None, duration_dee
 
     db.close()
 
-def update_training_table_row(user, date, time, duration=None, calories_consumed=None, mean_cardiac_frequency=None, database='database.db'):
+def update_training_table_row(user, date, time, duration=None, calories_consumed=None, mean_cardiac_frequency=None, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -537,7 +568,7 @@ def update_training_table_row(user, date, time, duration=None, calories_consumed
 
     db.close()
 
-def update_weight_table_row(user, date, weight, database='database.db'):
+def update_weight_table_row(user, date, weight, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -547,7 +578,7 @@ def update_weight_table_row(user, date, weight, database='database.db'):
     db.commit()
     db.close()
     
-def update_cardiac_frequency_table_row(user, date, time, cardiac_frequency, database='database.db'):
+def update_cardiac_frequency_table_row(user, date, time, cardiac_frequency, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -560,143 +591,35 @@ def update_cardiac_frequency_table_row(user, date, time, cardiac_frequency, data
 
 # add a row to a table
 # Useful when a user wants to add new data
-def add_security_table_row(user, password=None, age=None, sex=None, email=None, verified_email=None, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-    
-    # Initialize lists to hold parts of the SQL query
-    fields = []
-    values = []
+def add_security_table_row(user, password=None, age=None, sex=None, email=None, everification=0, database='app_salud/SGBD/database.db'):
+    try:
+        # Conectar a la base de datos
+        db = sqlite3.connect(database)
+        cursor = db.cursor()
 
-    # Fill the lists
-    if password is not None:
-        fields.append("password = ?")
-        values.append(password)
-    if age is not None:
-        fields.append("age = ?")
-        values.append(age)
-    if sex is not None:
-        fields.append("sex = ?")
-        values.append(sex)
-    if email is not None:
-        fields.append("email = ?")
-        values.append(email)
-    if verified_email is not None:
-        fields.append("everification = ?")
-        values.append(verified_email)
+        # Crear la consulta SQL para insertar una fila en la tabla security
+        query = """
+        INSERT INTO security (user, password, age, sex, email, everification)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        
+        # Ejecutar la consulta con los valores proporcionados
+        cursor.execute(query, (user, password, age, sex, email, everification))
 
-    # Add the user to the end of the values list
-    values.append(user)
-
-    # Create the SQL query and execute it
-    if fields:
-        sql_query = f"UPDATE security SET {', '.join(fields)} WHERE user = ?"
-        cursor.execute(sql_query, values)
+        # Guardar (commit) los cambios y cerrar la conexión
         db.commit()
+        db.close()
+        return True
 
-    db.close()
+    except Exception as e:
+        messagebox.showerror("Error", e)
 
-def add_steps_table_row(user, date, steps, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-
-    # Create the SQL query and execute it
-    sql_query = f"UPDATE steps SET steps = ? WHERE user = ? AND date = ?"
-    cursor.execute(sql_query, (steps, user, date))
-    db.commit()
-    db.close()
-    
-def add_sleep_table_row(user, date, quality=None, duration=None, duration_deep_sleep=None, interruptions=None, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-    
-    # Initialize lists to hold parts of the SQL query
-    fields = []
-    values = []
-
-    # Fill the lists
-    if quality is not None:
-        fields.append("quality = ?")
-        values.append(quality)
-    if duration is not None:
-        fields.append("duration = ?")
-        values.append(duration)
-    if duration_deep_sleep is not None:
-        fields.append("duration_deep_sleep = ?")
-        values.append(duration_deep_sleep)
-    if interruptions is not None:
-        fields.append("interruptions = ?")
-        values.append(interruptions)
-
-    # Add the user and date to the end of the values list
-    values.append(user)
-    values.append(date)
-
-    # Create the SQL query and execute it
-    if fields:
-        sql_query = f"UPDATE sleep SET {', '.join(fields)} WHERE user = ? AND date = ?"
-        cursor.execute(sql_query, values)
-        db.commit()
-
-    db.close()
-
-def add_training_table_row(user, date, time, duration=None, calories_consumed=None, mean_cardiac_frequency=None, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-    
-    # Initialize lists to hold parts of the SQL query
-    fields = []
-    values = []
-
-    # Fill the lists
-    if duration is not None:
-        fields.append("duration = ?")
-        values.append(duration)
-    if calories_consumed is not None:
-        fields.append("calories_consumed = ?")
-        values.append(calories_consumed)
-    if mean_cardiac_frequency is not None:
-        fields.append("mean_cardiac_frequency = ?")
-        values.append(mean_cardiac_frequency)
-
-    # Add the user and date to the end of the values list
-    values.append(user)
-    values.append(date)
-    values.append(time)
-
-    # Create the SQL query and execute it
-    if fields:
-        sql_query = f"UPDATE training SET {', '.join(fields)} WHERE user = ? AND date = ? AND time = ?"
-        cursor.execute(sql_query, values)
-        db.commit()
-
-    db.close()
-
-def add_weight_table_row(user, date, weight, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-
-    # Create the SQL query and execute it
-    sql_query = f"UPDATE weight SET weight = ? WHERE user = ? AND date = ?"
-    cursor.execute(sql_query, (weight, user, date))
-    db.commit()
-    db.close()
-    
-def add_cardiac_frequency_table_row(user, date, time, cardiac_frequency, database='database.db'):
-    db = sqlite3.connect(database)
-    cursor = db.cursor()
-
-    # Create the SQL query and execute it
-    sql_query = f"UPDATE cardiac_frequency SET cardiac_frequency = ? WHERE user = ? AND date = ? AND time = ?"
-    cursor.execute(sql_query, (cardiac_frequency, user, date, time))
-    db.commit()
-    db.close()
 
 
 # delete a row from a table
 # Useful when a user wants to delete data
-def delete_security_table_row(user, database='database.db'):
-    db = sqlite3.connect(database.db)
+def delete_security_table_row(user, database='app_salud/SGBD/database.db'):
+    db = sqlite3.connect('app_salud/SGBD/database.db')
     cursor = db.cursor()
 
     # Create the SQL query to delete the row based on the user (primary key)
@@ -707,8 +630,8 @@ def delete_security_table_row(user, database='database.db'):
     db.commit()
     db.close()
 
-def delete_steps_table_row(user, date, database='database.db'):
-    db = sqlite3.connect(database.db)
+def delete_steps_table_row(user, date, database='app_salud/SGBD/database.db'):
+    db = sqlite3.connect('app_salud/SGBD/database.db')
     cursor = db.cursor()
 
     # Create the SQL query to delete the row based on the user and date (primary key)
@@ -719,8 +642,8 @@ def delete_steps_table_row(user, date, database='database.db'):
     db.commit()
     db.close()
     
-def delete_sleep_table_row(user, date, database='database.db'):
-    db = sqlite3.connect(database.db)
+def delete_sleep_table_row(user, date, database='app_salud/SGBD/database.db'):
+    db = sqlite3.connect('app_salud/SGBD/database.db')
     cursor = db.cursor()
 
     # Create the SQL query to delete the row based on the user and date (primary key)
@@ -731,8 +654,8 @@ def delete_sleep_table_row(user, date, database='database.db'):
     db.commit()
     db.close()
 
-def delete_training_table_row(user, date, time, database='database.db'):
-    db = sqlite3.connect(database.db)
+def delete_training_table_row(user, date, time, database='app_salud/SGBD/database.db'):
+    db = sqlite3.connect('app_salud/SGBD/database.db')
     cursor = db.cursor()
 
     # Create the SQL query to delete the row based on the user, date and time (primary key)
@@ -743,8 +666,8 @@ def delete_training_table_row(user, date, time, database='database.db'):
     db.commit()
     db.close()
     
-def delete_weight_table_row(user, date, database='database.db'):
-    db = sqlite3.connect(database.db)
+def delete_weight_table_row(user, date, database='app_salud/SGBD/database.db'):
+    db = sqlite3.connect('app_salud/SGBD/database.db')
     cursor = db.cursor()
 
     # Create the SQL query to delete the row based on the user and date (primary key)
@@ -755,8 +678,8 @@ def delete_weight_table_row(user, date, database='database.db'):
     db.commit()
     db.close()
     
-def delete_cardiac_frequency_table_row(user, date, time, database='database.db'):
-    db = sqlite3.connect(database.db)
+def delete_cardiac_frequency_table_row(user, date, time, database='app_salud/SGBD/database.db'):
+    db = sqlite3.connect('app_salud/SGBD/database.db')
     cursor = db.cursor()
 
     # Create the SQL query to delete the row based on the user, date and time (primary key)
@@ -769,7 +692,7 @@ def delete_cardiac_frequency_table_row(user, date, time, database='database.db')
 
 
 # drop a table
-def drop_table(table, database="database.db"):
+def drop_table(table, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -781,7 +704,7 @@ def drop_table(table, database="database.db"):
     print(f"La tabla '{table}' ha sido eliminada")
 
 # drop an user
-def drop_user(user, database="database.db"):
+def drop_user(user, database="app_salud/SGBD/database.db"):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     
@@ -831,7 +754,7 @@ def drop_user(user, database="database.db"):
 
 # READING FROM THE DATABASE
 
-def get_security_table_row(user, database='database.db'):
+def get_security_table_row(user, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -843,7 +766,7 @@ def get_security_table_row(user, database='database.db'):
 
     return row  # Return the fetched row
 
-def get_steps_table_row(user, date, database='database.db'):
+def get_steps_table_row(user, date, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -855,7 +778,7 @@ def get_steps_table_row(user, date, database='database.db'):
 
     return row  # Return the fetched row
     
-def get_sleep_table_row(user, date, database='database.db'):
+def get_sleep_table_row(user, date, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -867,7 +790,7 @@ def get_sleep_table_row(user, date, database='database.db'):
 
     return row  # Return the fetched row
 
-def get_training_table_row(user, date, time, database='database.db'):
+def get_training_table_row(user, date, time, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -879,7 +802,7 @@ def get_training_table_row(user, date, time, database='database.db'):
 
     return row  # Return the fetched row
 
-def get_weight_table_row(user, date, database='database.db'):
+def get_weight_table_row(user, date, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
@@ -891,7 +814,7 @@ def get_weight_table_row(user, date, database='database.db'):
 
     return row  # Return the fetched row
     
-def get_cardiac_frequency_table_row(user, date, time, database='database.db'):
+def get_cardiac_frequency_table_row(user, date, time, database='app_salud/SGBD/database.db'):
     db = sqlite3.connect(database)
     cursor = db.cursor()
 
