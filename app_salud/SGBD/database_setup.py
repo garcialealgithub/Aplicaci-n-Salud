@@ -1,4 +1,4 @@
-import SGBD.database_functions as BD
+import app_salud.SGBD.database_functions as BD
 
 #Setup of all the tables
 try:

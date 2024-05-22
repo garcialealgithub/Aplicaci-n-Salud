@@ -1,4 +1,4 @@
-import login as login
+import app_salud.login as login
 from tkinter import *
 
 if __name__ == "__main__":

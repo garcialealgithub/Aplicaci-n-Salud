@@ -1,3 +1,2 @@
-a = 1
+import app_salud.SGBD.database_functions as BD
 
-print(type(a))
