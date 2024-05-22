@@ -29,7 +29,8 @@ class MainWindow:
         self.color = color
         print(self.color)
         self.modo_ejercicios = False
-        self.seleccion = None
+        self.seleccion = self.ejercicios = None
+        self.nombres = []
         
         # Frame principal
         self.framePrincipal = Frame(self.root, width=800, height=600)
@@ -143,16 +144,20 @@ class MainWindow:
 
     def mandar_seleccion(self, event):
         self.respuesta = api.InfoEjercicios(self.seleccion.get())
+        self.nombres = api.Nombres(self.respuesta)
+        self.actualizar_interfaz()
         
-    
+        
     def actualizar_interfaz(self):
         if self.modo_ejercicios:
             # Si estamos en modo ejercicios, muestra el Combobox
             if self.seleccion is None:  # Solo crea si no existe
-                self.seleccion = ttk.Combobox(self.root, values=api.musculos, state='readonly')
+                self.seleccion = ttk.Combobox(self.pantalla, values=api.musculos, state='readonly')
                 self.seleccion.place(x=8, y=8)
                 self.seleccion.bind("<<ComboboxSelected>>", self.mandar_seleccion)
                 
+            self.ejercicios = Listbox(self.pantalla, listvariable=self.nombres, height=10)
+            self.ejercicios.place(x=8, y=30)
             self.fondo.lower()  # Manda el fondo a la capa inferior
         else:
             # Si no estamos en modo ejercicios, asegúrate de que el fondo esté visible

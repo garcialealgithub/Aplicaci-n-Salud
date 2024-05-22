@@ -25,3 +25,8 @@ def InfoEjercicios(musc):
     else:
         print("Error:", response.status_code, response.text)
 
+def Nombres(lista):
+    nombre = []
+    for i in lista:
+        nombre.append(i['name'])
+    return nombre
