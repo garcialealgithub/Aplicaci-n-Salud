@@ -1,3 +1,5 @@
 # Requiere Python 12.0.0
 python-dotenv
 bcrypt
+
+Al ejecutar hay veces que al pasar de ventana en ventana al recorrer más de dos, y cerrar el programa, este no se cierra. Debe cerrarse desde el administrador de tareas.

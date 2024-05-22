@@ -57,14 +57,13 @@ class Login(preWindow):
                 
                 self.root.withdraw()
                 new_root = Toplevel(self.root)
-                print('tupu')
-                mainWindow = mW.MainWindow(self.user, self.password, new_root)
+                mainWindow = mW.MainWindow(self.user, self.password, 'Rojo', new_root)
                 new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
                 
             else:
                 messagebox.showerror("Error", "Usuario o contraseña incorrectos")
         except Exception as e:
-            messagebox.showerror("Error", 'Datos incorrectos')   
+            messagebox.showerror("Error", 'Problema al iniciar sesión')   
             
 
     def register(self):

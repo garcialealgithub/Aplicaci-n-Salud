@@ -4,11 +4,13 @@ import app_salud.SGBD.verifications as verf
 import app_salud.verify_email_window as verfWindow
 import app_salud.change_password as cp
 import app_salud.SGBD.database_functions as BD
+import app_salud.graphconfig as gconfig
+
 
 
 ## Clase ventana principal. Representa la ventana principal del programa
 class MainWindow:
-    def __init__(self, user, password, root):
+    def __init__(self, user, password, color, root):
         self.root = root
         self.root.title("Aplicación de salud")
         self.root.geometry("800x600")
@@ -22,7 +24,9 @@ class MainWindow:
         # Parámetros de ventana de usuario
         self.usuario = user
         self.password = password
-
+        self.color = color
+        print(self.color)
+        
         # Frame principal
         self.framePrincipal = Frame(self.root, width=800, height=600)
         self.framePrincipal.place(x=0, y=0)
@@ -71,12 +75,12 @@ class MainWindow:
 
 
         ## Botones de la ventana principal ## 
-        self.confButton = Button(self.pantalla, image=confImg, width=10, height=2)
-        self.confButton.place(x=0, y=0)
-
         self.buttons = Frame(self.framePrincipal, width=800, height=150, bg='gray')
         self.buttons.place(x=0, y=450)
         
+        self.confButton = Button(self.buttons, image=self.confImg, command=self.graphConfig)
+        self.confButton.place(x=0, y=0)
+
         self.button2 = Button(self.buttons, text="Botón 2", width=10, height=2)
         self.button2.grid(column=2, row=0, pady=60, padx=60)
 
@@ -92,12 +96,18 @@ class MainWindow:
 
     ## Funciones de los botones ##
     def logout(self):
-            self.root.withdraw()
-            new_root = Toplevel(self.root)
-            login.Login(new_root)
-            new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
-            
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        login.Login(new_root)
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
         
+        
+    def graphConfig(self):
+        self.root.withdraw()
+        new_root = Toplevel(self.root)
+        gconfig.grapConfig(self.usuario, self.password, self.color, new_root, "Configuración de color")
+        new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
+
     def deleteAccount(self):
         BD.drop_user_info(self.usuario)
         
@@ -109,14 +119,14 @@ class MainWindow:
     def changePassword(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
-        cp.ChangePassword(self.usuario, self.password, new_root)
+        cp.ChangePassword(self.usuario, self.password, self.color, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
         
         
     def verifyEmail(self):
         self.root.withdraw()
         new_root = Toplevel(self.root)
-        verfWindow.VerifyEmailWindow(self.usuario, self.password, new_root)
+        verfWindow.VerifyEmailWindow(self.usuario, self.password, self.color, new_root)
         new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
             
     # Función de cierre de ventana
