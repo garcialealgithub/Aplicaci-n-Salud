@@ -22,38 +22,38 @@ class UserActions:
 # Clase para ventana de cambio de contraseña
 class ChangePassword(UserActions):
     def __init__(self, user, password, color, root):
-        super().__init__(user, password, color, root, "Cambiar contraseña")
+        super().__init__(user, password, color, root, "Change password")
         
         self.frame = Frame(self.root, width=300, height=400)
         self.frame.place(x=0, y=0)
         
         # Botones y entradas de datos #
-        self.verifytext = Label(self.frame, text="Introduce el código \n que te hemos enviado al correo", font=("Arial", 15))
+        self.verifytext = Label(self.frame, text="Enter the code \n that we've sent you", font=("Arial", 15))
         self.verifytext.place(relx=0.5, rely=0.15, anchor=CENTER)
         
         self.entryCode = Entry(self.frame, font=("Arial", 16))
         self.entryCode.place(relx=0.5, rely=0.25, anchor=CENTER)
         
-        self.passw1 = Label(self.frame, text="Introduce la nueva contraseña", font=("Arial", 15))
+        self.passw1 = Label(self.frame, text="Enter new password", font=("Arial", 15))
         self.passw1.place(relx=0.5, rely=0.37, anchor=CENTER)
         
         self.entryPassw1 = Entry(self.frame, font=("Arial", 15), show='*')
         self.entryPassw1.place(relx=0.5, rely=0.45, anchor=CENTER)
         
-        self.passw2 = Label(self.frame, text="Repite la nueva contraseña", font=("Arial", 15))
+        self.passw2 = Label(self.frame, text="Repeat new password", font=("Arial", 15))
         self.passw2.place(relx=0.5, rely=0.57, anchor=CENTER)
         
         self.entryPassw2 = Entry(self.frame, font=("Arial", 15), show='*')
         self.entryPassw2.place(relx=0.5, rely=0.65, anchor=CENTER)
         
-        self.changeButton = Button(self.frame, text="Cambiar contraseña", font=("Arial", 15), bg='red', fg='white', command=self.change_password)
+        self.changeButton = Button(self.frame, text="Change password", font=("Arial", 15), bg='red', fg='white', command=self.change_password)
         self.changeButton.place(relx=0.5, rely=0.8, anchor=CENTER)
         
-        backtoMain = Button(self.frame, text="Volver",  font=("Arial", 15), command=self.backtomain)
+        backtoMain = Button(self.frame, text="Back",  font=("Arial", 15), command=self.backtomain)
         backtoMain.place(relx=0.5, rely=0.9, anchor=CENTER)
     
         # Enviamos el correo con el código de verificación
-        self.code = v.send_mail(BD.get_email_by_user(self.user), 'Cambio de contraseña')
+        self.code = v.send_mail(BD.get_email_by_user(self.user), 'Change password')
 
 
     def backtomain(self):
