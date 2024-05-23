@@ -1,61 +1,52 @@
-import sqlite3
-import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 
-def grafico_entrenamiento(user, date, dias):
-    # Conectar a la base de datos SQLite
-    conn = sqlite3.connect('app_salud/SGBD/database.db')
-    cursor = conn.cursor()
-    
-    # Consulta para obtener los datos de entrenamiento del usuario en el rango de fechas
-    consulta = """
-    SELECT date, mean_cardiac_frequency, duration, calories
-    FROM training
-    WHERE user = ?
-    AND date BETWEEN date(?) AND date(?, '+' || ? || ' days')
-    ORDER BY date;
+def grafico_imc_circular_con_punto(user, peso, altura):
     """
-    cursor.execute(consulta, (user, date, date, dias-1))
-    rows = cursor.fetchall()
+    Calcula el índice de masa corporal (IMC) dado el peso en kilogramos y la altura en metros, 
+    y representa el resultado en un gráfico circular con un punto en el estado del usuario.
     
-    # Cerrar la conexión a la base de datos
-    conn.close()
+    Args:
+        peso (float): El peso de la persona en kilogramos.
+        altura (float): La altura de la persona en metros.
+    """
+    imc = peso / (altura ** 2)
+    bajo_peso = 18.5
+    normal = 24.9
+    sobrepeso = 29.9
     
-    # Verificar si se obtuvieron datos
-    if not rows:
-        raise ValueError(f"No se encontraron datos de entrenamiento para el usuario: {user} en el rango de fechas especificado")
+    # Datos de referencia del IMC a nivel mundial (simulados)
+    porcentajes = [0.15, 0.55, 0.25, 0.05]  # Porcentajes de Bajo Peso, Normal, Sobrepeso, Obeso
     
-    # Convertir los datos en un DataFrame de pandas
-    df = pd.DataFrame(rows, columns=['date', 'mean_cardiac_frequency', 'duration', 'calories'])
+    etiquetas = ['Bajo Peso', 'Normal', 'Sobrepeso', 'Obeso']
     
-    # Crear la figura y los subgráficos
-    fig, axs = plt.subplots(3, 1, figsize=(10, 15), sharex=True)
+    # Creamos el gráfico circular
+    fig, ax = plt.subplots(figsize=(8, 8))
+    wedges, _, _ = ax.pie(porcentajes, labels=etiquetas, autopct='%1.1f%%', startangle=140, colors=['skyblue', 'lightgreen', 'orange', 'lightcoral'])
+    plt.axis('equal')  # Aspecto igual asegura que el pastel se dibuje como un círculo
+    plt.title('Distribución Global de IMC', fontsize=16, fontweight='bold')
     
-    # Graficar la frecuencia cardiaca en el primer subgráfico (color rojo)
-    axs[0].plot(df['date'], df['mean_cardiac_frequency'], marker='o', linestyle='-', color='red')
-    axs[0].set_ylabel('FRECUENCIA CARDIACA')
-    axs[0].grid(True)
+    # Colocamos el peso y la altura del usuario más abajo y más a la derecha
+    ax.text(0.98, 0.02, f'Peso: {peso} kg\nAltura: {altura} m', fontsize=10, ha='right', va='bottom', fontweight='bold', transform=ax.transAxes)
     
-    # Graficar la duración en el segundo subgráfico (color negro)
-    axs[1].plot(df['date'], df['duration'], marker='o', linestyle='-', color='black')
-    axs[1].set_ylabel('DURACIÓN')
-    axs[1].grid(True)
+    # Colocamos un punto en el estado del usuario y una etiqueta 'TÚ' justo arriba y ligeramente separada
+    angulo_estado_usuario = 90 - (imc - bajo_peso) * 90 / (sobrepeso - bajo_peso)
+    x_punto = np.cos(np.deg2rad(angulo_estado_usuario))
+    y_punto = np.sin(np.deg2rad(angulo_estado_usuario))
+    ax.plot(x_punto, y_punto, marker='o', markersize=10, color='red')
+    ax.text(x_punto, y_punto + 0.1, 'TÚ', fontsize=12, ha='center', va='bottom', fontweight='bold')
+    plt.gcf().canvas.set_window_title('IMC')
     
-    # Graficar las calorías en el tercer subgráfico (color naranja fuerte)
-    axs[2].plot(df['date'], df['calories'], marker='o', linestyle='-', color='orange')
-    axs[2].set_ylabel('CALORÍAS')
-    axs[2].grid(True)
-    
-    # Añadir título
-    plt.suptitle(f"GRÁFICA ENTRENAMIENTO '{user.upper()}' | {date} por {dias} días", y=0.95)
-    
-    # Ajustar diseño y guardar la imagen
-    plt.tight_layout()
-    directorio_destino = 'app_salud/GRAFOS/grafos_images/entreno'
+
+    directorio_destino = 'app_salud/GRAFOS/grafos_images/imc'
     if not os.path.exists(directorio_destino):
         os.makedirs(directorio_destino)
-    plt.savefig(f'{directorio_destino}/entreno_{user}_{date}.png')  # Guardar la imagen en la ubicación especificada
-    
+    plt.savefig(f'{directorio_destino}/imc_{user}.png')  # Guardar la imagen en la ubicación especificada
 
 
+# Ejemplo de uso
+peso_usuario = 70  # en kilogramos
+altura_usuario = 1.75  # en metros
+
+grafico_imc_circular_con_punto(peso_usuario, altura_usuario)

@@ -1,6 +1,7 @@
 import sqlite3
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import os
 
 def grafico_peso(user, date, dias, color):
@@ -43,6 +44,7 @@ def grafico_peso(user, date, dias, color):
     plt.ylabel('PESO (kg)')
     plt.grid(True)
     plt.xticks(rotation=45)
+    
     
     # Verificar si el directorio de destino existe, si no, créalo
     directorio_destino = 'app_salud/GRAFOS/grafos_images/peso'
@@ -94,6 +96,7 @@ def grafico_pasos(user, date, dias, color):
     plt.ylabel('PASOS')
     plt.grid(True)
     plt.xticks(rotation=45)
+    
     
     # Verificar si el directorio de destino existe, si no, créalo
     directorio_destino = 'app_salud/GRAFOS/grafos_images/pasos'
@@ -160,6 +163,7 @@ def grafico_freq_card(user, date, dias, color):
     plt.xticks(df['datetime'], df['datetime'].dt.strftime('%d-%b %H:%M'))  # Mostrar fecha y hora en el eje x
     plt.xticks(rotation=45)  # Rotar las etiquetas del eje x para mejor visualización
     
+
     # Verificar si el directorio de destino existe, si no, créalo
     directorio_destino = 'app_salud/GRAFOS/grafos_images/freq_card'
     if not os.path.exists(directorio_destino):
@@ -217,7 +221,8 @@ def grafico_sueño(user, date, dias):
     
     # Añadir título
     plt.suptitle(f"GRÁFICA SUEÑO '{user.upper()}' | {date} por {dias} días", y=0.95)
-    
+
+
     # Ajustar diseño y guardar la imagen
     plt.tight_layout()
     directorio_destino = 'app_salud/GRAFOS/grafos_images/sueño'
@@ -272,11 +277,47 @@ def grafico_entrenamiento(user, date, dias):
     
     # Añadir título
     plt.suptitle(f"GRÁFICA ENTRENAMIENTO '{user.upper()}' | {date} por {dias} días", y=0.95)
-    
+
+
     # Ajustar diseño y guardar la imagen
     plt.tight_layout()
     directorio_destino = 'app_salud/GRAFOS/grafos_images/entreno'
     if not os.path.exists(directorio_destino):
         os.makedirs(directorio_destino)
     plt.savefig(f'{directorio_destino}/entreno_{user}_{date}.png')  # Guardar la imagen en la ubicación especificada
+
+def grafico_imc(user, peso, altura):
+   
+    imc = peso / (altura ** 2)
+    bajo_peso = 18.5
+    normal = 24.9
+    sobrepeso = 29.9
+    
+    # Datos de referencia del IMC a nivel mundial (simulados)
+    porcentajes = [0.15, 0.55, 0.25, 0.05]  # Porcentajes de Bajo Peso, Normal, Sobrepeso, Obeso
+    
+    etiquetas = ['Bajo Peso', 'Normal', 'Sobrepeso', 'Obeso']
+    
+    # Creamos el gráfico circular
+    fig, ax = plt.subplots(figsize=(8, 8))
+    wedges, _, _ = ax.pie(porcentajes, labels=etiquetas, autopct='%1.1f%%', startangle=140, colors=['skyblue', 'lightgreen', 'orange', 'lightcoral'])
+    plt.axis('equal')  # Aspecto igual asegura que el pastel se dibuje como un círculo
+    plt.title('DISTRIBUCIÓN GLOBAL de IMC', fontsize=16, fontweight='bold')
+    
+    # Colocamos el peso y la altura del usuario más abajo y más a la derecha
+    ax.text(0.98, 0.02, f'Peso: {peso} kg\nAltura: {altura} m', fontsize=10, ha='right', va='bottom', fontweight='bold', transform=ax.transAxes)
+    
+    # Colocamos un punto en el estado del usuario y una etiqueta 'TÚ' justo arriba y ligeramente separada
+    angulo_estado_usuario = 90 - (imc - bajo_peso) * 90 / (sobrepeso - bajo_peso)
+    x_punto = np.cos(np.deg2rad(angulo_estado_usuario))
+    y_punto = np.sin(np.deg2rad(angulo_estado_usuario))
+    ax.plot(x_punto, y_punto, marker='o', markersize=10, color='red')
+    ax.text(x_punto, y_punto + 0.1, 'TÚ', fontsize=12, ha='center', va='bottom', fontweight='bold')
+    
+
+    directorio_destino = 'app_salud/GRAFOS/grafos_images/imc'
+    if not os.path.exists(directorio_destino):
+        os.makedirs(directorio_destino)
+    plt.savefig(f'{directorio_destino}/imc_{user}.png')  # Guardar la imagen en la ubicación especificada
+
 
