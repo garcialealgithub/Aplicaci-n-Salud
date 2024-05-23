@@ -87,4 +87,3 @@ def email_verificated(user):
     db.close()
     return verificated
 
-print(crear_codigo())
