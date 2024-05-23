@@ -13,7 +13,14 @@ muscles = {'abdominales': 'abdominals', 'abductores': 'abductors', 'aductores': 
            'dorsales': 'lats', 'espalda inferior': 'lower_back', 'media espalda': 'middle_back', 'cuello': 'neck',
            'cuadriceps': 'quadriceps', 'trapezoide': 'traps', 'triceps': 'triceps'}
 
-    
+
+def concrete_exercise(diccionarios, posicion):
+    concreto = {}
+    for i in range(len(diccionarios)):
+        if i == posicion:
+            concreto = diccionarios[i]
+            return concreto
+
 def InfoEjercicios(musc):
     musc = muscles[musc]
     headers={'X-Api-Key': 'g2xoHUNZk0IS0LxgIGipfA==qpzPJy4SCD1SV9gg'}
@@ -25,8 +32,9 @@ def InfoEjercicios(musc):
     else:
         print("Error:", response.status_code, response.text)
 
-def Nombres(lista):
-    nombre = []
-    for i in lista:
-        nombre.append(i['name'])
-    return nombre
+def nombresEjercicios(respuesta):
+    respuesta = respuesta
+    nombres = []
+    for i in range(len(respuesta)):
+        nombres.append(respuesta[i]['name'])
+    return nombres

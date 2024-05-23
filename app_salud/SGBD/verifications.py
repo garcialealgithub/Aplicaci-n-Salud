@@ -1,5 +1,5 @@
 import os, random, sqlite3, smtplib
-import database_functions as BD
+import app_salud.SGBD.database_functions as BD
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -87,4 +87,3 @@ def email_verificated(user):
     db.close()
     return verificated
 
-print(crear_codigo())

@@ -21,7 +21,7 @@ class preWindow:
 
 class Login(preWindow):
     def __init__(self, root):
-        super().__init__(root, "Inicio de sesión")
+        super().__init__(root, "Log in")
         
         background = Label(self.root, image=self.bag)
         background.place(x=0, y=0, relwidth=1, relheight=1)
@@ -29,22 +29,22 @@ class Login(preWindow):
         frameLogin = Frame(self.root, width=270, height=360, bg="white", relief='ridge', border=8)
         frameLogin.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        userTxt = Label(frameLogin, text="Usuario:", font=("Arial", 14))
+        userTxt = Label(frameLogin, text="User:", font=("Arial", 14))
         userTxt.place(relx=0.5, rely=0.2, anchor=CENTER)
 
         self.user_entry = Entry(frameLogin, font=("Arial", 12), justify="center")
         self.user_entry.place(relx=0.5, rely=0.3, anchor=CENTER)
 
-        passwordTxt = Label(frameLogin, text="Contraseña:", font=("Arial", 14))
+        passwordTxt = Label(frameLogin, text="Password:", font=("Arial", 14))
         passwordTxt.place(relx=0.5, rely=0.45, anchor=CENTER)
 
         self.passw_entry = Entry(frameLogin, font=("Arial", 14), justify="center", show="*")
         self.passw_entry.place(relx=0.5, rely=0.55, anchor=CENTER)
 
-        loginButton = Button(frameLogin, text="Iniciar sesión", font=("Arial", 16), bg="red", fg="white", command=self.login)
+        loginButton = Button(frameLogin, text="Log in", font=("Arial", 16), bg="red", fg="white", command=self.login)
         loginButton.place(relx=0.5, rely=0.7, anchor=CENTER)
 
-        registerButton = Button(frameLogin, text="Registrarse", font=("Arial", 12), fg='black', command=self.register)
+        registerButton = Button(frameLogin, text="Register", font=("Arial", 12), fg='black', command=self.register)
         registerButton.place(relx=0.5, rely=0.85, anchor=CENTER)
 
 
@@ -57,13 +57,13 @@ class Login(preWindow):
                 
                 self.root.withdraw()
                 new_root = Toplevel(self.root)
-                mainWindow = mW.MainWindow(self.user, self.password, 'Rojo', new_root)
+                mainWindow = mW.MainWindow(self.user, self.password, '#ff0000', new_root)
                 new_root.protocol("WM_DELETE_WINDOW", self.on_closing)
                 
             else:
-                messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+                messagebox.showerror("Error", "User or password incorrect")
         except Exception as e:
-            messagebox.showerror("Error", 'Problema al iniciar sesión')   
+            messagebox.showerror("Error", e)   
             
 
     def register(self):
@@ -84,25 +84,25 @@ class Register(preWindow):
         frameRegister = Frame(self.root, width=270, height=360, relief='ridge', border=8)
         frameRegister.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        Ruser = Label(frameRegister, text="Usuario:", font=("Arial", 14))
+        Ruser = Label(frameRegister, text="User:", font=("Arial", 14))
         Ruser.place(relx=0.2, rely=0.1)
 
         self.Ruser_entry = Entry(frameRegister, font=("Arial", 12), justify="center")
         self.Ruser_entry.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-        Rpassword = Label(frameRegister, text="Contraseña:", font=("Arial", 14))
+        Rpassword = Label(frameRegister, text="Password:", font=("Arial", 14))
         Rpassword.place(relx=0.2, rely=0.3)
 
         self.Rpassw_entry = Entry(frameRegister, font=("Arial", 12), justify="center", show="*")
         self.Rpassw_entry.place(relx=0.5, rely=0.4, anchor=CENTER)
 
-        Rpassword = Label(frameRegister, text="Edad:", font=("Arial", 14))
+        Rpassword = Label(frameRegister, text="Age:", font=("Arial", 14))
         Rpassword.place(relx=0.2, rely=0.5)
 
         self.Redad_entry = Entry(frameRegister, font=("Arial", 12), justify="center")
         self.Redad_entry.place(relx=0.5, rely=0.6, anchor=CENTER)
 
-        sexo = Label(frameRegister, text="Sexo:", font=("Arial", 14))
+        sexo = Label(frameRegister, text="Gender:", font=("Arial", 14))
         sexo.place(relx=0.2, rely=0.7)
 
         self.variable = StringVar()
@@ -111,9 +111,9 @@ class Register(preWindow):
         def sexChoose():
             self.sexo = self.variable.get()
 
-        hombre = Radiobutton(frameRegister, text="Hombre", variable=self.variable, value='M', command=sexChoose)
+        hombre = Radiobutton(frameRegister, text="Man", variable=self.variable, value='M', command=sexChoose)
         hombre.place(relx=0.5, rely=0.70, anchor='w')
-        mujer = Radiobutton(frameRegister, text="Mujer", variable=self.variable, value='F', command=sexChoose)
+        mujer = Radiobutton(frameRegister, text="Woman", variable=self.variable, value='F', command=sexChoose)
         mujer.place(relx=0.5, rely=0.78, anchor='w')
 
         registerButton = Button(frameRegister, text="Registrarse", font=("Arial", 16), fg='white', bg='red', command=self.register)
@@ -138,18 +138,18 @@ class Register(preWindow):
             try:
                 self.edad = int(self.Redad_entry.get())
             except ValueError:
-                messagebox.showerror("Error", "La edad debe ser un número")
+                messagebox.showerror("Error", "Age must be a number")
                 return
 
             # Validar la contraseña con expresiones regulares
             if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$', self.contraseña):
-                messagebox.showerror("Error", "La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número")
+                messagebox.showerror("Error", "The password must be at least 8 characters long, including at least one letter and one number.")
                 return
 
             # Hashear la contraseña si pasa la validación
             hashed_password = BD.hasher(self.contraseña)
 
             if BD.add_security_table_row(self.usuario, password=hashed_password, age=self.edad, sex=self.sexo, email=None, everification=0):
-                messagebox.showinfo("Correcto", "Usuario registrado correctamente")
+                messagebox.showinfo("Correcto", "User registered correctly")
         except Exception as e:
             messagebox.showerror("Error", str(e))
