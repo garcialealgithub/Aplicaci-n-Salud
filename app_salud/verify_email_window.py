@@ -12,7 +12,7 @@ class VerifyEmailWindow(cp.UserActions):
         self.frame = Frame(self.root, width = 300, height = 400)
         self.frame.place(x = 0, y = 0)
         
-        self.verifytext = Label(self.frame, text = "Entry code", font = ("Arial", 16))
+        self.verifytext = Label(self.frame, text = "Entry email", font = ("Arial", 16))
         self.verifytext.place(relx = 0.5, rely = 0.2, anchor=CENTER)
         
         self.entryemail = Entry(self.frame, font = ("Arial", 16))

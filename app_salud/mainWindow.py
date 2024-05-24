@@ -295,7 +295,10 @@ class MainWindow:
         match self.grafo_a_imprimir:
             case 'Peso':
                 graph.grafico_peso(self.usuario, '2024-05-16', 7, self.color)
-
+                try:
+                    self.labelgrafo.destroy()
+                except:
+                    pass
                 self.img=PhotoImage(file='app_salud/GRAFOS/images/grafico_peso.png')
                 self.labelgrafo = Label(self.pantalla, image=self.img)
                 self.labelgrafo.place(x=65, y=10)
@@ -303,14 +306,20 @@ class MainWindow:
             case 'Pasos':
 
                 graph.grafico_pasos(self.usuario, '2024-05-16', 7, self.color)
-
+                try:
+                    self.labelgrafo.destroy()
+                except:
+                    pass
                 self.img=PhotoImage(file='app_salud/GRAFOS/grafos_images/pasos/pasos_grafico.png')
                 self.labelgrafo = Label(self.pantalla, image=self.img)
                 self.labelgrafo.place(x=65, y=10)
 
             case 'F. Cardíaca':
                 graph.grafico_freq_card(self.usuario, '2024-05-16', 7, self.color)
-
+                try:
+                    self.labelgrafo.destroy()
+                except:
+                    pass
                 self.img=PhotoImage(file='app_salud/GRAFOS/grafos_images/freq_card/freq_card_grafico.png')
                 self.labelgrafo = Label(self.pantalla, image=self.img)
                 self.labelgrafo.place(x=65, y=10)
@@ -318,14 +327,20 @@ class MainWindow:
 
             case 'Sueño':
                 graph.grafico_sueño(self.usuario, '2024-05-16', 7)
-
+                try:
+                    self.labelgrafo.destroy()
+                except:
+                    pass
                 self.img=PhotoImage(file='app_salud/GRAFOS/grafos_images/sueño/sueño_grafico.png')
                 self.labelgrafo = Label(self.pantalla, image=self.img)
                 self.labelgrafo.place(x=65, y=10)
             
             case 'Entrenamiento':
                 graph.grafico_entrenamiento(self.usuario, '2024-05-16', 7)
-
+                try:
+                    self.labelgrafo.destroy()
+                except:
+                    pass
                 self.img=PhotoImage(file='app_salud/GRAFOS/grafos_images/entreno/entreno_grafico.png')
                 self.labelgrafo = Label(self.pantalla, image=self.img)
                 self.labelgrafo.place(x=65, y=10)
@@ -341,6 +356,10 @@ class MainWindow:
                    
         match self.modo_Pantalla:
             case 'ejercicios':
+                try:
+                    self.labelgrafo.destroy()
+                except:
+                     pass
                 # Si estamos en modo ejercicios, muestra el Combobox
                 self.seleccion = ttk.Combobox(self.ComboFrame, values=api.musculos, state='readonly')
                 self.seleccion.place(x=8, y=8)
